@@ -1,0 +1,175 @@
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-cyber-bg: #05010e;
+  --color-cyber-card: #0d061a;
+  --color-cyber-border: #23123a;
+  --color-neon-purple: #a258ff;
+  --color-neon-purple-glow: rgba(162, 88, 255, 0.4);
+  --color-neon-green: #10b981;
+  --color-neon-green-glow: rgba(16, 185, 129, 0.4);
+  --color-neon-yellow: #eab308;
+  --color-neon-yellow-glow: rgba(234, 179, 8, 0.4);
+  --color-neon-blue: #3b82f6;
+  --color-neon-blue-glow: rgba(59, 130, 246, 0.4);
+  --color-neon-red: #ef4444;
+  --color-neon-red-glow: rgba(239, 68, 68, 0.4);
+  
+  --font-sans: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+  --font-mono: 'Share Tech Mono', ui-monospace, monospace;
+
+  --animate-scanline: scanline 6s linear infinite;
+  --animate-pulse-slow: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-crt-flicker: crt-flicker 0.15s infinite;
+  --animate-border-glow: border-glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes scanline {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes crt-flicker {
+  0% { opacity: 0.985; }
+  50% { opacity: 1.0; }
+  100% { opacity: 0.99; }
+}
+
+@keyframes border-glow {
+  0% {
+    box-shadow: 0 0 5px var(--color-neon-purple-glow), inset 0 0 5px var(--color-neon-purple-glow);
+    border-color: rgba(162, 88, 255, 0.4);
+  }
+  100% {
+    box-shadow: 0 0 15px var(--color-neon-purple-glow), inset 0 0 10px var(--color-neon-purple-glow);
+    border-color: rgba(162, 88, 255, 0.9);
+  }
+}
+
+/* Base custom styles */
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #05010e;
+  background-image: radial-gradient(circle at 50% 50%, rgba(162, 88, 255, 0.08) 0%, rgba(5, 1, 14, 0) 80%);
+  color: #f3f0ff;
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Custom cyber grid effect */
+.cyber-grid {
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, rgba(162, 88, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(162, 88, 255, 0.04) 1px, transparent 1px);
+}
+
+/* CRT Screen Scanline Overlay */
+.crt-overlay::before {
+  content: " ";
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.2) 50%), linear-gradient(90deg, rgba(162, 88, 255, 0.03), rgba(0, 255, 0, 0.01), rgba(162, 88, 255, 0.03));
+  z-index: 9999;
+  background-size: 100% 4px, 6px 100%;
+  pointer-events: none;
+}
+
+/* Terminal text glow */
+.text-glow-purple {
+  text-shadow: 0 0 8px rgba(162, 88, 255, 0.8), 0 0 15px rgba(162, 88, 255, 0.4);
+}
+
+.text-glow-green {
+  text-shadow: 0 0 8px rgba(16, 185, 129, 0.8), 0 0 15px rgba(16, 185, 129, 0.4);
+}
+
+.text-glow-yellow {
+  text-shadow: 0 0 8px rgba(234, 179, 8, 0.8), 0 0 15px rgba(234, 179, 8, 0.4);
+}
+
+.text-glow-blue {
+  text-shadow: 0 0 8px rgba(59, 130, 246, 0.8), 0 0 15px rgba(59, 130, 246, 0.4);
+}
+
+.text-glow-red {
+  text-shadow: 0 0 8px rgba(239, 68, 68, 0.8), 0 0 15px rgba(239, 68, 68, 0.4);
+}
+
+/* Box glows */
+.glow-purple {
+  box-shadow: 0 0 15px rgba(162, 88, 255, 0.3);
+  border-color: rgba(162, 88, 255, 0.5);
+}
+
+.glow-green {
+  box-shadow: 0 0 15px rgba(16, 185, 129, 0.35);
+  border-color: rgba(16, 185, 129, 0.6);
+}
+
+.glow-yellow {
+  box-shadow: 0 0 15px rgba(234, 179, 8, 0.35);
+  border-color: rgba(234, 179, 8, 0.6);
+}
+
+.glow-blue {
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.35);
+  border-color: rgba(59, 130, 246, 0.6);
+}
+
+.glow-red {
+  box-shadow: 0 0 15px rgba(239, 68, 68, 0.35);
+  border-color: rgba(239, 68, 68, 0.6);
+}
+
+/* Matrix characters screen */
+.matrix-bg {
+  background: linear-gradient(rgba(5, 1, 14, 0.96), rgba(5, 1, 14, 0.96)), 
+              url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Ctext x='10' y='20' fill='%23a258ff' opacity='0.05' font-family='monospace' font-size='12'%3E01%3C/text%3E%3Ctext x='40' y='30' fill='%23a258ff' opacity='0.03' font-family='monospace' font-size='10'%3E1010%3C/text%3E%3Ctext x='60' y='15' fill='%23a258ff' opacity='0.05' font-family='monospace' font-size='11'%3E110%3C/text%3E%3Ctext x='20' y='50' fill='%23a258ff' opacity='0.03' font-family='monospace' font-size='9'%3E010%3C/text%3E%3Ctext x='50' y='65' fill='%23a258ff' opacity='0.06' font-family='monospace' font-size='13'%3E1%3C/text%3E%3Ctext x='15' y='75' fill='%23a258ff' opacity='0.02' font-family='monospace' font-size='10'%3E00%3C/text%3E%3C/svg%3E");
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #05010e;
+}
+::-webkit-scrollbar-thumb {
+  background: #190c2e;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #a258ff;
+}
+
+/* Green theme utility classes */
+.cyber-grid-green {
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, rgba(16, 185, 129, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(16, 185, 129, 0.04) 1px, transparent 1px);
+}
+
+.matrix-bg-green {
+  background: linear-gradient(rgba(5, 1, 14, 0.96), rgba(5, 1, 14, 0.96)), 
+              url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Ctext x='10' y='20' fill='%2310b981' opacity='0.05' font-family='monospace' font-size='12'%3E01%3C/text%3E%3Ctext x='40' y='30' fill='%2310b981' opacity='0.03' font-family='monospace' font-size='10'%3E1010%3C/text%3E%3Ctext x='60' y='15' fill='%2310b981' opacity='0.05' font-family='monospace' font-size='11'%3E110%3C/text%3E%3Ctext x='20' y='50' fill='%2310b981' opacity='0.03' font-family='monospace' font-size='9'%3E010%3C/text%3E%3Ctext x='50' y='65' fill='%2310b981' opacity='0.06' font-family='monospace' font-size='13'%3E1%3C/text%3E%3Ctext x='15' y='75' fill='%2310b981' opacity='0.02' font-family='monospace' font-size='10'%3E00%3C/text%3E%3C/svg%3E");
+}
