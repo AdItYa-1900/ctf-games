@@ -50,7 +50,7 @@ const Hub = ({ onNavigate }: { onNavigate: (path: string) => void }) => {
             <span className="text-[9px] text-[#a258ff] font-bold uppercase block tracking-wider">NODE 02 // SECURE SHELL</span>
             <h3 className="text-slate-200 font-extrabold text-sm uppercase group-hover:text-white">TERMINAL AWAKENING</h3>
             <p className="text-slate-500 font-sans text-xs leading-relaxed">
-              Live Linux shell sandbox. Run real commands against a virtual filesystem to master the command line.
+              Infiltrate Obsidian's server across 4 hacking sectors. Explore, uncover hidden files, and master the Linux command line.
             </p>
           </div>
           <span className="text-[10px] text-[#a258ff] font-bold uppercase tracking-widest flex items-center gap-1">
