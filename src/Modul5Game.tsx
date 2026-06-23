@@ -1,27 +1,32 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
+import './index5game.css';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Volume2, VolumeX, RefreshCw, ChevronRight, AlertTriangle, CheckCircle2, Terminal, FileKey } from 'lucide-react';
+import { Volume2, VolumeX, CheckCircle2, Shield, Lock } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
-// ==========================================
-// 1. SYNTHESIZED SOUND SYSTEM (Web Audio API)
-// ==========================================
+interface FileGoal {
+  name: string;
+  targetNum: string; // e.g. "600"
+  targetStr: string; // e.g. "rw-------"
+  description: string;
+}
+
+const FILES: FileGoal[] = [
+  { name: 'private_key.pem', targetNum: '600', targetStr: 'rw-------', description: 'A highly sensitive private key. Only the Owner should be able to Read and Write. No one else should have any access.' },
+  { name: 'public_script.sh', targetNum: '755', targetStr: 'rwxr-xr-x', description: 'A script everyone needs to run. The Owner gets full access (Read, Write, Execute). Group and Others get Read and Execute only.' }
+];
+
 class SoundManager {
   private ctx: AudioContext | null = null;
   private isMuted: boolean = false;
 
   constructor() {
-    const savedMute = localStorage.getItem('sentinel_sound_muted');
-    this.isMuted = savedMute === 'true';
+    this.isMuted = localStorage.getItem('sentinel_sound_muted') === 'true';
   }
 
-  private initContext() {
-    if (!this.ctx) {
-      this.ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
-    }
-    if (this.ctx.state === 'suspended') {
-      this.ctx.resume();
-    }
+  private init() {
+    if (!this.ctx) this.ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+    if (this.ctx.state === 'suspended') this.ctx.resume();
     return this.ctx;
   }
 
@@ -30,884 +35,354 @@ class SoundManager {
     localStorage.setItem('sentinel_sound_muted', muted ? 'true' : 'false');
   }
 
-  public getMuted(): boolean {
-    return this.isMuted;
-  }
+  public getMuted() { return this.isMuted; }
 
-  public playClick() {
+  public playToggle() {
     if (this.isMuted) return;
     try {
-      const ctx = this.initContext();
+      const ctx = this.init();
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(600, ctx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(900, ctx.currentTime + 0.05);
-      gain.gain.setValueAtTime(0.04, ctx.currentTime);
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(500, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(700, ctx.currentTime + 0.05);
+      gain.gain.setValueAtTime(0.02, ctx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.05);
       osc.connect(gain);
       gain.connect(ctx.destination);
       osc.start();
       osc.stop(ctx.currentTime + 0.05);
-    } catch (e) {
-      console.warn(e);
-    }
+    } catch {}
   }
 
-  public playCorrect() {
+  public playLock() {
     if (this.isMuted) return;
     try {
-      const ctx = this.initContext();
-      const now = ctx.currentTime;
+      const ctx = this.init();
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
       osc.type = 'sine';
-      osc.frequency.setValueAtTime(550, now);
-      osc.frequency.setValueAtTime(800, now + 0.07);
-      gain.gain.setValueAtTime(0.06, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
+      osc.frequency.setValueAtTime(400, ctx.currentTime);
+      osc.frequency.setValueAtTime(600, ctx.currentTime + 0.1);
+      gain.gain.setValueAtTime(0.03, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.2);
       osc.connect(gain);
       gain.connect(ctx.destination);
       osc.start();
-      osc.stop(now + 0.18);
-    } catch (e) {
-      console.warn(e);
-    }
+      osc.stop(ctx.currentTime + 0.2);
+    } catch {}
   }
 
-  public playIncorrect() {
+  public playSuccess() {
     if (this.isMuted) return;
     try {
-      const ctx = this.initContext();
+      const ctx = this.init();
       const now = ctx.currentTime;
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = 'sawtooth';
-      osc.frequency.setValueAtTime(140, now);
-      osc.frequency.linearRampToValueAtTime(70, now + 0.25);
-      gain.gain.setValueAtTime(0.1, now);
-      gain.gain.linearRampToValueAtTime(0.001, now + 0.25);
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start();
-      osc.stop(now + 0.25);
-    } catch (e) {
-      console.warn(e);
-    }
-  }
-
-  public playVictory() {
-    if (this.isMuted) return;
-    try {
-      const ctx = this.initContext();
-      const now = ctx.currentTime;
-      const notes = [261.63, 329.63, 392.00, 523.25, 659.25, 783.99, 1046.50];
-      notes.forEach((freq, idx) => {
+      [349.23, 440.00, 523.25].forEach((freq, idx) => {
         const time = now + idx * 0.08;
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
-        osc.type = 'sine';
         osc.frequency.setValueAtTime(freq, time);
-        gain.gain.setValueAtTime(0.05, time);
-        gain.gain.exponentialRampToValueAtTime(0.001, time + 0.4);
+        gain.gain.setValueAtTime(0.04, time);
+        gain.gain.exponentialRampToValueAtTime(0.001, time + 0.2);
         osc.connect(gain);
         gain.connect(ctx.destination);
         osc.start(time);
-        osc.stop(time + 0.4);
+        osc.stop(time + 0.2);
       });
-    } catch (e) {
-      console.warn(e);
-    }
+    } catch {}
   }
 }
 
 const sound = new SoundManager();
 
-// ==========================================
-// 2. BACKGROUND EFFECTS
-// ==========================================
-const TelemetryOverlay: React.FC = () => {
-  return (
-    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden select-none matrix-bg">
-      <div className="absolute inset-0 cyber-grid opacity-40"></div>
-      <div className="absolute top-0 left-0 w-full h-[3px] bg-red-500/5 shadow-[0_0_6px_rgba(239,68,68,0.2)] animate-scanline"></div>
-      <div className="absolute top-0 left-0 w-6 h-6 border-t border-l border-red-500/20"></div>
-      <div className="absolute top-0 right-0 w-6 h-6 border-t border-r border-red-500/20"></div>
-      <div className="absolute bottom-0 left-0 w-6 h-6 border-b border-l border-red-500/20"></div>
-      <div className="absolute bottom-0 right-0 w-6 h-6 border-b border-r border-red-500/20"></div>
-    </div>
-  );
-};
-
-// ==========================================
-// 3. INTRO SCREEN
-// ==========================================
-interface IntroScreenProps {
-  onStart: () => void;
-  isMuted: boolean;
-  onToggleMute: () => void;
-}
-
-const IntroScreen: React.FC<IntroScreenProps> = ({ onStart, isMuted, onToggleMute }) => {
-  const [isDecrypting, setIsDecrypting] = useState(false);
-  const [decryptProgress, setDecryptProgress] = useState(0);
-
-  const handleStart = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (isDecrypting) return;
-    sound.playClick();
-    setIsDecrypting(true);
-
-    const interval = setInterval(() => {
-      setDecryptProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(interval);
-          setTimeout(() => {
-            onStart();
-          }, 300);
-          return 100;
-        }
-        return prev + Math.floor(Math.random() * 20 + 8);
-      });
-    }, 80);
-  };
-
-  return (
-    <div className="w-full max-w-xl bg-cyber-card/95 border-2 border-red-500 rounded-lg p-6 shadow-[0_0_20px_rgba(239,68,68,0.35)] text-center relative overflow-hidden backdrop-blur-md">
-      <div className="flex justify-between items-center mb-5 border-b border-cyber-border/40 pb-3">
-        <div className="flex items-center gap-1.5 text-red-400 text-sm font-mono tracking-widest font-bold">
-          <Terminal className="w-4 h-4" />
-          PROJECT SENTINEL
-        </div>
-        <button
-          onClick={onToggleMute}
-          className="p-1.5 rounded border border-cyber-border/80 text-slate-400 hover:text-red-400 cursor-pointer animate-none"
-        >
-          {isMuted ? <VolumeX className="w-4 h-4 text-red-400" /> : <Volume2 className="w-4 h-4 text-red-400" />}
-        </button>
-      </div>
-
-      <h1 className="font-mono text-xl sm:text-2xl font-bold tracking-widest text-slate-100 uppercase">
-        FIELD ASSESSMENT 05
-      </h1>
-      <h2 className="font-mono text-red-400 text-xs sm:text-sm tracking-wider mt-1.5 font-semibold uppercase">
-        Mission: Who Stole the Key?
-      </h2>
-
-      <AnimatePresence mode="wait">
-        {!isDecrypting ? (
-          <motion.div
-            key="form"
-            initial={{ opacity: 0, y: 5 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0 }}
-            className="mt-6 space-y-6"
-          >
-            <div className="bg-slate-950/60 border border-cyber-border/40 rounded p-5 text-sm sm:text-base text-slate-200 font-mono text-left space-y-4 leading-relaxed max-h-[380px] overflow-y-auto pr-1 scrollbar-thin">
-              <p className="text-slate-300 font-sans text-sm sm:text-[14px]">
-                Agent, obsidian's secure fileserver has been breached. A decryption key file (`secret.key`) has been accessed. Local authorization limits mean only users with specific privileges could have read the file.
-              </p>
-
-              <div className="border-l-2 border-red-500/50 pl-3 py-1 space-y-1">
-                <p className="text-xs text-red-400 uppercase tracking-wider font-bold font-mono">INCIDENT REPORT:</p>
-                <div className="text-slate-400 text-xs sm:text-[13px] font-sans mt-1 space-y-1">
-                  <div>• Breached target file: <span className="text-red-400 font-mono font-bold">secret.key</span></div>
-                  <div>• File permissions: <span className="text-red-400 font-mono font-bold">-rw-r-----</span></div>
-                  <div>• File Owner: <span className="text-red-400 font-mono font-bold">shadow</span> | Group: <span className="text-red-400 font-mono font-bold">admins</span></div>
-                </div>
-              </div>
-
-              <div className="border-l-2 border-red-500/50 pl-3 py-1 space-y-1">
-                <p className="text-xs text-red-400 uppercase tracking-wider font-bold font-mono">YOUR DEPLOYMENT OBJECTIVES:</p>
-                <div className="text-slate-400 text-xs sm:text-[13px] font-sans mt-1 space-y-1">
-                  <div>1. Map suspect user profiles and group list structures.</div>
-                  <div>2. Identify all suspects whose UNIX authorizations grant them read access to the key.</div>
-                  <div>3. Interrogate the secure audit logs to isolate the exact infiltrator.</div>
-                </div>
-              </div>
-
-              <p className="text-slate-400 font-sans text-xs sm:text-[13px]">
-                Time is of the essence. We must lock down the target and isolate the infiltrator before they delete the secure audit log data.
-              </p>
-            </div>
-
-            <div className="space-y-3 font-mono">
-              <p className="text-[11px] text-slate-400 uppercase tracking-widest">
-                Click Start Mission to establish telemetry link.
-              </p>
-              <form onSubmit={handleStart}>
-                <button
-                  type="submit"
-                  className="w-full bg-red-600 hover:bg-red-500 text-white font-mono font-bold text-sm tracking-widest py-3 rounded border border-red-500 shadow-md cursor-pointer transition-all uppercase animate-pulse"
-                >
-                  START MISSION
-                </button>
-              </form>
-            </div>
-          </motion.div>
-        ) : (
-          <motion.div
-            key="loader"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="mt-10 mb-4 space-y-4"
-          >
-            <div className="font-mono text-xs sm:text-sm text-red-400 flex flex-col items-center gap-2">
-              <span className="animate-pulse font-bold tracking-wider">
-                DECRYPTING SIMULATOR MODULES...
-              </span>
-            </div>
-            <div className="w-full bg-slate-950 border border-cyber-border rounded h-4 overflow-hidden p-[1px]">
-              <div
-                className="h-full bg-red-600/80 rounded transition-all duration-700"
-                style={{ width: `${decryptProgress}%` }}
-              ></div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-};
-
-// ==========================================
-// 4. MAIN GAME ORCHESTRATOR
-// ==========================================
-interface Suspect {
-  id: string;
-  name: string;
-  groups: string[];
-  avatarColor: string;
-}
-
-const suspectsList: Suspect[] = [
-  { id: 'alex', name: 'alex', groups: ['users'], avatarColor: 'from-pink-500 to-purple-600' },
-  { id: 'sam', name: 'sam', groups: ['users', 'admins'], avatarColor: 'from-blue-500 to-cyan-600' },
-  { id: 'morgan', name: 'morgan', groups: ['users'], avatarColor: 'from-yellow-500 to-orange-600' },
-  { id: 'shadow', name: 'shadow', groups: ['admins'], avatarColor: 'from-slate-700 to-slate-900' }
-];
-
-interface PermissionRound {
-  file: string;
-  permissions: string;
-  owner: string;
-  group: string;
-  question: string;
-  correctAnswers: string[];
-  explanation: string;
-  learnBreakdown: {
-    owner: string;
-    group: string;
-    others: string;
-  };
-}
-
-const permissionRounds: PermissionRound[] = [
-  {
-    file: 'secret.key',
-    permissions: '-rw-r-----',
-    owner: 'shadow',
-    group: 'admins',
-    question: 'Analyze the Unix permission settings above. Which suspect(s) possess authorization privileges to read secret.key? (Select all that apply)',
-    correctAnswers: ['sam', 'shadow'],
-    explanation: 'Correct! Both sam (in group admins) and shadow (file owner) possess UNIX authorization to read the key file. All other users are blocked.',
-    learnBreakdown: {
-      owner: 'Read + Write',
-      group: 'Read',
-      others: 'No Access'
-    }
-  },
-  {
-    file: 'backup.sh',
-    permissions: '-rwxr-x---',
-    owner: 'morgan',
-    group: 'users',
-    question: 'Analyze the Unix permission settings above. Which suspect(s) possess authorization privileges to execute backup.sh? (Select all that apply)',
-    correctAnswers: ['alex', 'sam', 'morgan'],
-    explanation: 'Correct! Owner morgan (rwx) and group users members alex and sam (r-x) can execute the file. shadow is in group admins (others) and has no access.',
-    learnBreakdown: {
-      owner: 'Read + Write + Execute',
-      group: 'Read + Execute',
-      others: 'No Access'
-    }
-  },
-  {
-    file: 'admin_log.txt',
-    permissions: '-rw-------',
-    owner: 'sam',
-    group: 'admins',
-    question: 'Analyze the Unix permission settings above. Which suspect(s) possess authorization privileges to write to admin_log.txt? (Select all that apply)',
-    correctAnswers: ['sam'],
-    explanation: 'Correct! Only the owner sam (rw-) can write/modify this file. Since group and others permissions are completely blank (---), even shadow (group admins) has no access.',
-    learnBreakdown: {
-      owner: 'Read + Write',
-      group: 'No Access',
-      others: 'No Access'
-    }
-  }
-];
-
-const Modul5Game: React.FC = () => {
-  const [gameState, setGameState] = useState<'INTRO' | 'PHASE_1' | 'PHASE_2' | 'WON'>('INTRO');
+export default function Modul5Game() {
+  const [gameState, setGameState] = useState<'PLAYING' | 'WON'>('PLAYING');
   const [isMuted, setIsMuted] = useState(sound.getMuted());
+  
+  const [currentFileIdx, setCurrentFileIdx] = useState(0);
+  const activeFile = FILES[currentFileIdx];
 
-  // Phase 1 states
-  const [selectedSuspects, setSelectedSuspects] = useState<string[]>([]);
-  const [phase1Feedback, setPhase1Feedback] = useState<{ isChecked: boolean; isCorrect: boolean; message: string } | null>(null);
-  const [currentRound, setCurrentRound] = useState(0);
-
-  // Phase 2 states
-  const [selectedThief, setSelectedThief] = useState<string | null>(null);
-  const [phase2Feedback, setPhase2Feedback] = useState<{ isChecked: boolean; isCorrect: boolean; message: string } | null>(null);
-  const [logTerminalLines, setLogTerminalLines] = useState<string[]>([]);
-
-  const terminalEndRef = useRef<HTMLDivElement>(null);
+  const [perms, setPerms] = useState({
+    ownerR: false, ownerW: false, ownerX: false,
+    groupR: false, groupW: false, groupX: false,
+    otherR: false, otherW: false, otherX: false,
+  });
 
   const handleToggleMute = () => {
-    const nextMute = !isMuted;
-    setIsMuted(nextMute);
-    sound.setMute(nextMute);
-    sound.playClick();
+    const nextVal = !isMuted;
+    setIsMuted(nextVal);
+    sound.setMute(nextVal);
   };
 
-  const handleStartMission = () => {
-    setSelectedSuspects([]);
-    setPhase1Feedback(null);
-    setSelectedThief(null);
-    setPhase2Feedback(null);
-    setLogTerminalLines([]);
-    setCurrentRound(0);
-    setGameState('PHASE_1');
+  const getPermString = () => {
+    let str = '';
+    str += perms.ownerR ? 'r' : '-';
+    str += perms.ownerW ? 'w' : '-';
+    str += perms.ownerX ? 'x' : '-';
+    str += perms.groupR ? 'r' : '-';
+    str += perms.groupW ? 'w' : '-';
+    str += perms.groupX ? 'x' : '-';
+    str += perms.otherR ? 'r' : '-';
+    str += perms.otherW ? 'w' : '-';
+    str += perms.otherX ? 'x' : '-';
+    return str;
   };
 
-  // Check Phase 1 suspects selection
-  const handleToggleSelectSuspect = (suspectId: string) => {
-    if (phase1Feedback?.isChecked) return;
-    sound.playClick();
-    setSelectedSuspects((prev) =>
-      prev.includes(suspectId) ? prev.filter((id) => id !== suspectId) : [...prev, suspectId]
-    );
+  const getPermNumber = () => {
+    const calc = (r: boolean, w: boolean, x: boolean) => (r ? 4 : 0) + (w ? 2 : 0) + (x ? 1 : 0);
+    const owner = calc(perms.ownerR, perms.ownerW, perms.ownerX);
+    const group = calc(perms.groupR, perms.groupW, perms.groupX);
+    const other = calc(perms.otherR, perms.otherW, perms.otherX);
+    return `${owner}${group}${other}`;
   };
 
-  const handleVerifyPhase1 = () => {
-    sound.playClick();
-    const activeRound = permissionRounds[currentRound];
-    
-    const isCorrect = selectedSuspects.length === activeRound.correctAnswers.length &&
-                      selectedSuspects.every(id => activeRound.correctAnswers.includes(id));
-
-    if (isCorrect) {
-      sound.playCorrect();
-      setPhase1Feedback({
-        isChecked: true,
-        isCorrect: true,
-        message: activeRound.explanation
-      });
-    } else {
-      sound.playIncorrect();
-      
-      let errorMsg = 'Invalid authorization mapping. ';
-      if (currentRound === 0) {
-        const isAlexSelected = selectedSuspects.includes('alex');
-        const isMorganSelected = selectedSuspects.includes('morgan');
-        const isSamSelected = selectedSuspects.includes('sam');
-        const isShadowSelected = selectedSuspects.includes('shadow');
-        if (isAlexSelected || isMorganSelected) {
-          errorMsg += 'Note that alex and morgan are only in the group "users". Since the permission is -rw-r-----, "others" have zero access (---). ';
-        }
-        if (!isSamSelected || !isShadowSelected) {
-          errorMsg += 'Remember: Owner is shadow (reads via user permissions), and group is admins (which includes sam, reading via group permissions). ';
-        }
-      } else if (currentRound === 1) {
-        const isShadowSelected = selectedSuspects.includes('shadow');
-        if (isShadowSelected) {
-          errorMsg += 'shadow is only in group "admins". Since the permission is -rwxr-x---, others have no access (---). ';
-        } else {
-          errorMsg += 'Remember: group is users, which includes alex and sam. Morgan is the owner and also has access. ';
-        }
-      } else if (currentRound === 2) {
-        const isShadowSelected = selectedSuspects.includes('shadow');
-        const isAlexSelected = selectedSuspects.includes('alex');
-        const isMorganSelected = selectedSuspects.includes('morgan');
-        if (isShadowSelected || isAlexSelected || isMorganSelected) {
-          errorMsg += 'Note that even though shadow is in group admins, the group permissions are completely empty (---), denying all group access. ';
-        } else {
-          errorMsg += 'Only the file owner (sam) has read/write permissions (-rw-------). ';
-        }
-      }
-
-      setPhase1Feedback({
-        isChecked: true,
-        isCorrect: false,
-        message: errorMsg + 'Review the permission settings and adjust your selections.'
-      });
-    }
-  };
-
-  const handleRetryPhase1 = () => {
-    sound.playClick();
-    setPhase1Feedback(null);
-    setSelectedSuspects([]);
-  };
-
-  const handleNextRound = () => {
-    sound.playClick();
-    setCurrentRound(prev => prev + 1);
-    setSelectedSuspects([]);
-    setPhase1Feedback(null);
-  };
-
-  const handleProceedToPhase2 = () => {
-    sound.playClick();
-    setGameState('PHASE_2');
-    setLogTerminalLines([
-      'security-serverd v4.12 initialized.',
-      'establishing secure link to audits audit_secure.log...',
-      'READY // Accessing security logs for target file secret.key...',
-      '',
-      '[2026-06-19T22:10:04] ACCESS REQUEST: secret.key | USER: shadow | RESULT: SUCCESS',
-      '[2026-06-19T22:11:42] DECRYPT ATTEMPT: secret.key | USER: shadow | RESULT: KEY_STOLEN',
-      '[2026-06-19T22:12:01] LOG FILE SHREDDER STARTED | USER: shadow | RESULT: TERMINATED',
-      '',
-      'Last accessed by:',
-      'shadow'
-    ]);
+  const togglePerm = (key: keyof typeof perms) => {
+    sound.playToggle();
+    setPerms(prev => ({ ...prev, [key]: !prev[key] }));
   };
 
   useEffect(() => {
-    if (terminalEndRef.current) {
-      terminalEndRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [logTerminalLines]);
+    if (gameState !== 'PLAYING') return;
 
-  const handleConfirmThief = () => {
-    if (selectedThief === 'shadow') {
-      sound.playVictory();
-      confetti({
-        particleCount: 150,
-        spread: 80,
-        origin: { y: 0.6 },
-        colors: ['#ef4444', '#f87171']
-      });
-      setPhase2Feedback({
-        isChecked: true,
-        isCorrect: true,
-        message: 'BINGO! The audit log confirms shadow accessed and decrypted secret.key just before shredding. Suspect shadow is identified as the Obsidian Infiltrator thief!'
-      });
-    } else {
-      sound.playIncorrect();
-      let explanation = '';
-      if (selectedThief === 'sam') {
-        explanation = 'The logs show sam requested access earlier, but it was denied/idle. Sam is not the thief.';
-      } else if (selectedThief === 'alex' || selectedThief === 'morgan') {
-        explanation = 'Permissions blocked both alex and morgan from reading the secret.key entirely. They could not have stolen it.';
+    if (getPermNumber() === activeFile.targetNum) {
+      sound.playLock();
+      
+      if (currentFileIdx < FILES.length - 1) {
+        setTimeout(() => {
+          setCurrentFileIdx(prev => prev + 1);
+          setPerms({
+            ownerR: false, ownerW: false, ownerX: false,
+            groupR: false, groupW: false, groupX: false,
+            otherR: false, otherW: false, otherX: false,
+          });
+        }, 1500);
+      } else {
+        setTimeout(() => {
+          sound.playSuccess();
+          confetti({ particleCount: 150, spread: 80, origin: { y: 0.65 }, colors: ['#ef4444', '#f87171'] });
+          setGameState('WON');
+        }, 1000);
       }
-      setPhase2Feedback({
-        isChecked: true,
-        isCorrect: false,
-        message: `Incorrect accusation. ${explanation} Re-evaluate the files log buffer.`
-      });
     }
-  };
-
-  const handleRetryPhase2 = () => {
-    sound.playClick();
-    setSelectedThief(null);
-    setPhase2Feedback(null);
-  };
+  }, [perms, activeFile, currentFileIdx, gameState]);
 
   return (
-    <div className="relative min-h-screen flex flex-col justify-between crt-overlay">
-      <TelemetryOverlay />
-
-      <main className="relative z-10 flex-1 flex flex-col items-center justify-center py-6 px-4">
-        <div className="w-full max-w-md text-center select-none pt-2 pb-4 font-mono">
-          <div className="text-[11px] text-red-500/50 font-bold tracking-[0.25em] uppercase">
-            PROJECT SENTINEL
-          </div>
-          <div className="text-[9px] text-slate-500 tracking-[0.2em] uppercase mt-1">
-            FIELD ASSESSMENT 05
-          </div>
+    <div className="relative min-h-[580px] w-full max-w-5xl bg-cyber-bg border-2 border-red-500 rounded-lg p-5 flex flex-col justify-between shadow-[0_0_20px_rgba(239,68,68,0.25)] select-none">
+      
+      {/* HEADER */}
+      <div className="flex justify-between items-center border-b border-cyber-border pb-3 mb-4">
+        <span className="text-xs uppercase tracking-widest text-slate-400 font-bold">
+          Concept Lab 05 // File Permissions
+        </span>
+        <div className="flex items-center gap-3">
+          <span className="text-[10px] text-red-400 bg-red-950/30 px-2.5 py-1 rounded border border-red-500/20 font-bold uppercase tracking-wider">
+            File {currentFileIdx + 1} of {FILES.length}
+          </span>
+          <button onClick={handleToggleMute} className="p-1 rounded text-slate-400 hover:text-red-400 cursor-pointer">
+            {isMuted ? <VolumeX className="w-4 h-4 text-slate-600" /> : <Volume2 className="w-4 h-4 text-red-400" />}
+          </button>
         </div>
+      </div>
 
+      <div className="flex-1 flex flex-col justify-between">
         <AnimatePresence mode="wait">
-          {/* ==========================================
-              A. INTRO SCREEN
-             ========================================== */}
-          {gameState === 'INTRO' && (
-            <IntroScreen onStart={handleStartMission} isMuted={isMuted} onToggleMute={handleToggleMute} />
-          )}
-
-          {/* ==========================================
-              B. PHASE 1: PRIVILEGE ANALYSIS
-             ========================================== */}
-          {gameState === 'PHASE_1' && (() => {
-            const activeRound = permissionRounds[currentRound];
-            return (
-              <motion.div
-                key={`phase1-round-${currentRound}`}
-                initial={{ opacity: 0, scale: 0.98 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0 }}
-                className="w-full max-w-xl bg-cyber-card/95 border-2 border-red-500 rounded-lg p-5 shadow-[0_0_20px_rgba(239,68,68,0.35)] backdrop-blur-md font-mono select-none"
-              >
-                {/* Header */}
-                <div className="flex justify-between items-center mb-4 border-b border-red-950/60 pb-3">
-                  <div>
-                    <span className="text-[9px] text-slate-500 uppercase tracking-widest font-bold">CASE FILE ANALYSIS</span>
-                    <h3 className="text-slate-100 text-sm font-bold uppercase tracking-wider">
-                      PHASE 1 // ACCESS AUTHORIZATION (ROUND {currentRound + 1}/3)
-                    </h3>
-                  </div>
-                  <button onClick={handleToggleMute} className="p-1.5 rounded border border-cyber-border/80 text-slate-400 hover:text-red-400 cursor-pointer">
-                    {isMuted ? <VolumeX className="w-4 h-4 text-red-400" /> : <Volume2 className="w-4 h-4 text-red-400" />}
-                  </button>
-                </div>
-
-                {/* Secure File metadata */}
-                <div className="bg-slate-950/80 border border-red-950/50 rounded p-4 mb-4 flex items-center gap-4">
-                  <div className="w-12 h-12 bg-red-950/20 border border-dashed border-red-500/30 flex items-center justify-center rounded text-red-400">
-                    <FileKey className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <span className="text-[9px] text-slate-500 uppercase font-bold tracking-wider">BREACHED NODE OBJECTIVE</span>
-                    <div className="text-slate-200 text-sm font-bold font-mono">{activeRound.file}</div>
-                    <div className="text-xs text-red-400 font-mono mt-0.5">
-                      Permissions: <span className="font-extrabold tracking-wider">{activeRound.permissions}</span>
-                    </div>
-                    <div className="text-[10px] text-slate-400 font-mono mt-0.5">
-                      Owner: <span className="text-slate-200 font-semibold">{activeRound.owner}</span> | Group: <span className="text-slate-200 font-semibold">{activeRound.group}</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Scenario briefing Question */}
-                <div className="bg-slate-950/40 border border-cyber-border/40 rounded p-4 mb-4 text-xs sm:text-[13px] leading-relaxed text-slate-300">
-                  <span className="text-red-400 font-bold block mb-1">INTERACTIVE INSTRUCTION:</span>
-                  {activeRound.question}
-                </div>
-
-                {/* Suspect listings */}
-                <div className="grid grid-cols-2 gap-3 mb-5">
-                  {suspectsList.map((suspect) => {
-                    const isChecked = selectedSuspects.includes(suspect.id);
-                    const isDisabled = phase1Feedback?.isChecked;
-                    return (
-                      <div
-                        key={suspect.id}
-                        onClick={() => !isDisabled && handleToggleSelectSuspect(suspect.id)}
-                        className={`border p-3.5 rounded-md flex flex-col justify-between space-y-3 transition-all select-none cursor-pointer ${
-                          isChecked
-                            ? 'bg-red-950/15 border-red-500 shadow-[0_0_10px_rgba(239,68,68,0.15)]'
-                            : 'bg-slate-950/60 border-cyber-border hover:border-red-900/60'
-                        } ${isDisabled ? 'opacity-80 cursor-default' : ''}`}
-                      >
-                        <div className="flex items-center gap-2">
-                          <div className={`w-8 h-8 rounded-full bg-gradient-to-br ${suspect.avatarColor} flex items-center justify-center shadow-md border border-slate-700 text-[11px] font-bold text-slate-100 uppercase`}>
-                            {suspect.id === 'alex' ? 'A' : suspect.id === 'sam' ? 'B' : suspect.id === 'morgan' ? 'C' : 'D'}
-                          </div>
-                          <div>
-                            <div className="text-[13px] font-bold text-slate-200 uppercase">
-                              {suspect.id === 'alex' ? 'A) ' : suspect.id === 'sam' ? 'B) ' : suspect.id === 'morgan' ? 'C) ' : 'D) '}
-                              {suspect.name}
-                            </div>
-                            <span className="text-[9px] text-slate-500 tracking-wider">USER PROFILE</span>
-                          </div>
-                        </div>
-                        
-                        <div className="bg-slate-950/80 rounded px-2 py-1 border border-cyber-border/30 text-[10px]">
-                          <span className="text-slate-500 uppercase block tracking-wider font-bold">Groups:</span>
-                          <span className="text-slate-300 font-mono">{suspect.groups.join(', ')}</span>
-                        </div>
-
-                        <div className="flex justify-between items-center text-[10px] select-none pt-0.5">
-                          <span className="text-slate-500 font-bold uppercase">SELECT AUTHORIZED:</span>
-                          <div className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${isChecked ? 'bg-red-600 border-red-500 text-white' : 'border-slate-700'}`}>
-                            {isChecked && '✓'}
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-
-                {/* Feedback Alert banner */}
-                {phase1Feedback && (
-                  <div className="space-y-4 mb-5">
-                    <div className={`border p-4 rounded text-xs font-mono flex items-start gap-3 select-text ${phase1Feedback.isCorrect ? 'bg-emerald-950/20 border-emerald-900 text-emerald-400' : 'bg-red-950/20 border-red-900 text-red-400'}`}>
-                      {phase1Feedback.isCorrect ? (
-                        <CheckCircle2 className="w-5 h-5 shrink-0 text-emerald-500" />
-                      ) : (
-                        <AlertTriangle className="w-5 h-5 shrink-0 text-red-500 animate-pulse" />
-                      )}
-                      <div className="leading-relaxed">
-                        {phase1Feedback.message}
-                      </div>
-                    </div>
-
-                    <div className="bg-slate-950/80 border border-red-950/50 rounded p-4 text-xs font-mono">
-                      <span className="text-red-400 font-bold block mb-2">⚡ SECURITY INTELLIGENCE BRIEFING: PLAYER LEARNS</span>
-                      <div className="space-y-2">
-                        <div className="text-slate-200 font-bold tracking-wider font-mono text-sm">{activeRound.permissions}</div>
-                        <div className="text-slate-400 text-xs font-sans">means:</div>
-                        <div className="grid grid-cols-3 gap-2 text-[11px] bg-slate-900/60 p-2.5 rounded border border-cyber-border/40">
-                          <div>
-                            <span className="text-red-400 font-bold block uppercase text-[9px] tracking-wider">Owner ({activeRound.owner})</span>
-                            <span className="text-slate-300">{activeRound.learnBreakdown.owner}</span>
-                          </div>
-                          <div>
-                            <span className="text-red-400 font-bold block uppercase text-[9px] tracking-wider">Group ({activeRound.group})</span>
-                            <span className="text-slate-300">{activeRound.learnBreakdown.group}</span>
-                          </div>
-                          <div>
-                            <span className="text-red-400 font-bold block uppercase text-[9px] tracking-wider">Others</span>
-                            <span className="text-slate-300">{activeRound.learnBreakdown.others}</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {/* Control Buttons */}
-                <div className="flex gap-4 pt-1">
-                  {!phase1Feedback ? (
-                    <button
-                      onClick={handleVerifyPhase1}
-                      disabled={selectedSuspects.length === 0}
-                      className="w-full bg-red-600 hover:bg-red-500 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-red-600 text-white font-mono font-bold text-xs tracking-widest py-3 rounded border border-red-500 shadow-md cursor-pointer transition-all uppercase"
-                    >
-                      VERIFY PRIVILEGES
-                    </button>
-                  ) : !phase1Feedback.isCorrect ? (
-                    <button
-                      onClick={handleRetryPhase1}
-                      className="w-full bg-slate-900 hover:bg-slate-800 text-slate-200 font-mono font-bold text-xs tracking-widest py-3 rounded border border-cyber-border cursor-pointer transition-all uppercase flex items-center justify-center gap-1.5"
-                    >
-                      <RefreshCw className="w-4 h-4" />
-                      RE-EXAMINE DATA
-                    </button>
-                  ) : currentRound < 2 ? (
-                    <button
-                      onClick={handleNextRound}
-                      className="w-full bg-red-600 hover:bg-red-500 text-white font-mono font-bold text-xs tracking-widest py-3 rounded border border-red-500 shadow-md cursor-pointer transition-all uppercase flex items-center justify-center gap-1.5 animate-pulse"
-                    >
-                      PROCEED TO ROUND {currentRound + 2}
-                      <ChevronRight className="w-4 h-4" />
-                    </button>
-                  ) : (
-                    <button
-                      onClick={handleProceedToPhase2}
-                      className="w-full bg-red-600 hover:bg-red-500 text-white font-mono font-bold text-xs tracking-widest py-3 rounded border border-red-500 shadow-md cursor-pointer transition-all uppercase flex items-center justify-center gap-1.5 animate-pulse"
-                    >
-                      ACCESS SECURITY AUDIT LOGS
-                      <ChevronRight className="w-4 h-4" />
-                    </button>
-                  )}
-                </div>
-              </motion.div>
-            );
-          })()}
-
-          {/* ==========================================
-              C. PHASE 2: AUDIT LOG INVESTIGATION
-             ========================================== */}
-          {gameState === 'PHASE_2' && (
-            <motion.div
-              key="phase2"
-              initial={{ opacity: 0, scale: 0.98 }}
-              animate={{ opacity: 1, scale: 1 }}
+          {gameState === 'PLAYING' && (
+            <motion.div 
+              key="playing" 
+              className="grid grid-cols-1 lg:grid-cols-12 gap-5 h-full"
+              initial={{ opacity: 0 }} 
+              animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="w-full max-w-xl bg-cyber-card/95 border-2 border-red-500 rounded-lg p-5 shadow-[0_0_20px_rgba(239,68,68,0.35)] backdrop-blur-md font-mono select-none"
             >
-              {/* Header */}
-              <div className="flex justify-between items-center mb-4 border-b border-red-950/60 pb-3">
-                <div>
-                  <span className="text-[9px] text-slate-500 uppercase tracking-widest font-bold">CASE FILE ANALYSIS</span>
-                  <h3 className="text-slate-100 text-sm font-bold uppercase tracking-wider">PHASE 2 // AUDIT INTERROGATION</h3>
-                </div>
-                <button onClick={handleToggleMute} className="p-1.5 rounded border border-cyber-border/80 text-slate-400 hover:text-red-400 cursor-pointer">
-                  {isMuted ? <VolumeX className="w-4 h-4 text-red-400" /> : <Volume2 className="w-4 h-4 text-red-400" />}
-                </button>
-              </div>
-
-              {/* Instructions Callout */}
-              <div className="bg-slate-950/40 border border-cyber-border/40 rounded p-4 mb-4 text-xs leading-relaxed text-slate-300">
-                <span className="text-red-400 font-bold block mb-1">INTERACTIVE INSTRUCTION:</span>
-                Analyze the decrypted audit logs console below to identify who accessed and stole the decryption key.
-              </div>
-
-              {/* Simulated Logs Terminal Console */}
-              <div className="bg-slate-950 border border-red-950/60 rounded p-3 text-[11px] font-mono leading-relaxed h-[200px] overflow-y-auto mb-4 scrollbar-thin select-text">
-                {logTerminalLines.map((line, idx) => (
-                  <div key={idx} className={line.startsWith('agent@') ? 'text-red-400 font-bold' : line.includes('KEY_STOLEN') ? 'text-red-400 font-bold animate-pulse' : 'text-slate-300 whitespace-pre'}>
-                    {line}
-                  </div>
-                ))}
-                <div ref={terminalEndRef}></div>
-              </div>
-
-              {/* Thief selection grid */}
-              <motion.div
-                initial={{ opacity: 0, y: 5 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="bg-slate-950/60 border border-red-900/30 rounded p-4 mb-5"
-              >
-                <span className="text-[10px] text-red-400 font-bold uppercase tracking-wider block mb-2 select-none">
-                  QUESTION: WHO STOLE THE KEY?
-                </span>
-                
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-2 select-none">
-                  {['alex', 'sam', 'morgan', 'shadow'].map((suspectId) => {
-                    const isSelected = selectedThief === suspectId;
-                    const isDisabled = phase2Feedback?.isCorrect;
-                    const prefixMap: Record<string, string> = { alex: 'A) ', sam: 'B) ', morgan: 'C) ', shadow: 'D) ' };
-                    return (
-                      <button
-                        key={suspectId}
-                        onClick={() => !isDisabled && setSelectedThief(suspectId)}
-                        disabled={isDisabled}
-                        className={`border font-bold text-xs py-3 rounded-md transition-all uppercase cursor-pointer ${
-                          isSelected
-                            ? 'bg-red-950/20 border-red-500 text-red-400 shadow-[0_0_8px_rgba(239,68,68,0.15)]'
-                            : 'bg-slate-950 border-cyber-border text-slate-400 hover:border-red-950'
-                        } disabled:opacity-85 disabled:cursor-default`}
-                      >
-                        {prefixMap[suspectId] || ''}{suspectId}
-                      </button>
-                    );
-                  })}
-                </div>
-
-                {phase2Feedback && (
-                  <div className={`border p-3.5 rounded mt-3 text-xs font-mono flex items-start gap-3 select-text ${phase2Feedback.isCorrect ? 'bg-emerald-950/20 border-emerald-900 text-emerald-400' : 'bg-red-950/20 border-red-900 text-red-400'}`}>
-                    {phase2Feedback.isCorrect ? (
-                      <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-500" />
-                    ) : (
-                      <AlertTriangle className="w-4 h-4 shrink-0 text-red-500 animate-pulse" />
-                    )}
-                    <div className="leading-relaxed">
-                      {phase2Feedback.message}
+              {/* Left Panel: Education */}
+              <div className="lg:col-span-4 space-y-4 text-sm font-sans flex flex-col">
+                <div className="bg-[#0d061a] border border-cyber-border p-5 rounded-lg text-slate-300 flex-1 space-y-4">
+                  <h2 className="text-red-400 font-bold text-lg uppercase tracking-wider mb-2 flex items-center gap-2">
+                    <Shield className="w-5 h-5" />
+                    File Permissions
+                  </h2>
+                  <p>
+                    Every file on a computer has 3 types of users: <strong>Owner</strong> (the person who made it), <strong>Group</strong> (a team of people), and <strong>Others</strong> (everyone else in the world).
+                  </p>
+                  <p>
+                    You can give each type of user 3 powers:
+                  </p>
+                  
+                  <div className="bg-slate-950 p-3 rounded border border-slate-800 space-y-2">
+                    <div className="flex justify-between items-center border-b border-slate-800 pb-1">
+                      <span className="font-mono text-red-400 font-bold">r = Read</span>
+                      <span className="font-mono text-slate-400">Value: 4</span>
+                    </div>
+                    <div className="flex justify-between items-center border-b border-slate-800 pb-1">
+                      <span className="font-mono text-orange-400 font-bold">w = Write</span>
+                      <span className="font-mono text-slate-400">Value: 2</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="font-mono text-blue-400 font-bold">x = Execute</span>
+                      <span className="font-mono text-slate-400">Value: 1</span>
                     </div>
                   </div>
-                )}
-              </motion.div>
 
-              {/* Accusation Confirm Buttons */}
-              <div className="flex gap-4 pt-1">
-                {!phase2Feedback ? (
-                  <button
-                    onClick={handleConfirmThief}
-                    disabled={!selectedThief}
-                    className="w-full bg-red-600 hover:bg-red-500 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-red-600 text-white font-mono font-bold text-xs tracking-widest py-3 rounded border border-red-500 shadow-md cursor-pointer transition-all uppercase"
-                  >
-                    CONFIRM SUSPECT ACCUSATION
-                  </button>
-                ) : !phase2Feedback.isCorrect ? (
-                  <button
-                    onClick={handleRetryPhase2}
-                    className="w-full bg-slate-900 hover:bg-slate-800 text-slate-200 font-mono font-bold text-xs tracking-widest py-3 rounded border border-cyber-border cursor-pointer transition-all uppercase flex items-center justify-center gap-1.5"
-                  >
-                    <RefreshCw className="w-4 h-4" />
-                    RE-EVALUATE CLUES
-                  </button>
-                ) : (
-                  <button
-                    onClick={() => {
-                      sound.playClick();
-                      setGameState('WON');
-                    }}
-                    className="w-full bg-red-600 hover:bg-red-500 text-white font-mono font-bold text-xs tracking-widest py-3 rounded border border-red-500 shadow-md cursor-pointer transition-all uppercase flex items-center justify-center gap-1.5 animate-pulse"
-                  >
-                    COMPLETE FILE HANDSHAKE
-                    <ChevronRight className="w-4 h-4" />
-                  </button>
-                )}
+                  <p className="text-xs text-slate-400">
+                    These powers are added together as numbers. So Read (4) + Write (2) = 6. <br/>
+                    If a file's permission is 644, it means the Owner gets a 6, the Group gets a 4, and Others get a 4.
+                  </p>
+
+                  <div className="mt-6 p-4 border border-red-500/30 bg-red-950/20 rounded-lg">
+                    <span className="text-red-400 font-bold block mb-1 text-xs uppercase tracking-wider">Your Mission</span>
+                    {activeFile.description}
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Panel: Interactive Sandbox */}
+              <div className="lg:col-span-8 flex flex-col gap-4">
+                
+                {/* Active File Target */}
+                <div className="bg-[#05010e] border border-cyber-border p-5 rounded-lg flex items-center justify-between shadow-inner">
+                  <div className="flex items-center gap-3">
+                    <Lock className="w-8 h-8 text-slate-500" />
+                    <div>
+                      <div className="text-white font-mono font-bold text-lg">{activeFile.name}</div>
+                      <div className="text-slate-400 text-xs uppercase tracking-widest">Goal: {activeFile.targetNum} ({activeFile.targetStr})</div>
+                    </div>
+                  </div>
+                  
+                  {/* Live Feedback Display */}
+                  <div className="bg-black border-2 border-slate-800 p-3 rounded-lg text-center flex gap-4 min-w-[150px]">
+                    <div>
+                      <div className="text-[10px] text-slate-500 uppercase tracking-widest mb-1">String</div>
+                      <div className="font-mono text-lg font-bold tracking-widest text-white">{getPermString()}</div>
+                    </div>
+                    <div className="border-l border-slate-800 pl-4">
+                      <div className="text-[10px] text-slate-500 uppercase tracking-widest mb-1">Octal</div>
+                      <div className="font-mono text-lg font-bold text-red-400">{getPermNumber()}</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 3x3 Grid Matrix */}
+                <div className="bg-[#0d061a] border border-cyber-border rounded-lg flex-1 p-6 flex flex-col justify-center">
+                  
+                  <div className="grid grid-cols-4 gap-4 text-center mb-4">
+                    <div></div>
+                    <div className="font-bold text-slate-300 uppercase tracking-widest text-sm">Owner</div>
+                    <div className="font-bold text-slate-300 uppercase tracking-widest text-sm">Group</div>
+                    <div className="font-bold text-slate-300 uppercase tracking-widest text-sm">Others</div>
+                  </div>
+
+                  {/* Read Row */}
+                  <div className="grid grid-cols-4 gap-4 items-center mb-4">
+                    <div className="text-right font-bold text-red-400 font-mono flex flex-col">
+                      <span>READ (r)</span>
+                      <span className="text-[10px] text-slate-500">+4</span>
+                    </div>
+                    {[
+                      { key: 'ownerR', val: perms.ownerR },
+                      { key: 'groupR', val: perms.groupR },
+                      { key: 'otherR', val: perms.otherR }
+                    ].map((item, i) => (
+                      <div key={i} className="flex justify-center">
+                        <button
+                          onClick={() => togglePerm(item.key as any)}
+                          className={`w-16 h-16 rounded-xl border-2 transition-all duration-200 cursor-pointer flex items-center justify-center font-mono text-2xl font-bold shadow-lg ${
+                            item.val 
+                              ? 'bg-red-900/40 border-red-500 text-red-400 shadow-[0_0_15px_rgba(239,68,68,0.3)] scale-105' 
+                              : 'bg-slate-900 border-slate-700 text-slate-600 hover:border-red-900'
+                          }`}
+                        >
+                          {item.val ? 'r' : '-'}
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Write Row */}
+                  <div className="grid grid-cols-4 gap-4 items-center mb-4">
+                    <div className="text-right font-bold text-orange-400 font-mono flex flex-col">
+                      <span>WRITE (w)</span>
+                      <span className="text-[10px] text-slate-500">+2</span>
+                    </div>
+                    {[
+                      { key: 'ownerW', val: perms.ownerW },
+                      { key: 'groupW', val: perms.groupW },
+                      { key: 'otherW', val: perms.otherW }
+                    ].map((item, i) => (
+                      <div key={i} className="flex justify-center">
+                        <button
+                          onClick={() => togglePerm(item.key as any)}
+                          className={`w-16 h-16 rounded-xl border-2 transition-all duration-200 cursor-pointer flex items-center justify-center font-mono text-2xl font-bold shadow-lg ${
+                            item.val 
+                              ? 'bg-orange-900/40 border-orange-500 text-orange-400 shadow-[0_0_15px_rgba(249,115,22,0.3)] scale-105' 
+                              : 'bg-slate-900 border-slate-700 text-slate-600 hover:border-orange-900'
+                          }`}
+                        >
+                          {item.val ? 'w' : '-'}
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Execute Row */}
+                  <div className="grid grid-cols-4 gap-4 items-center">
+                    <div className="text-right font-bold text-blue-400 font-mono flex flex-col">
+                      <span>EXECUTE (x)</span>
+                      <span className="text-[10px] text-slate-500">+1</span>
+                    </div>
+                    {[
+                      { key: 'ownerX', val: perms.ownerX },
+                      { key: 'groupX', val: perms.groupX },
+                      { key: 'otherX', val: perms.otherX }
+                    ].map((item, i) => (
+                      <div key={i} className="flex justify-center">
+                        <button
+                          onClick={() => togglePerm(item.key as any)}
+                          className={`w-16 h-16 rounded-xl border-2 transition-all duration-200 cursor-pointer flex items-center justify-center font-mono text-2xl font-bold shadow-lg ${
+                            item.val 
+                              ? 'bg-blue-900/40 border-blue-500 text-blue-400 shadow-[0_0_15px_rgba(59,130,246,0.3)] scale-105' 
+                              : 'bg-slate-900 border-slate-700 text-slate-600 hover:border-blue-900'
+                          }`}
+                        >
+                          {item.val ? 'x' : '-'}
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+
+                </div>
+
               </div>
             </motion.div>
           )}
 
-          {/* ==========================================
-              D. MISSION SUCCESS DOSSIER SCREEN
-             ========================================== */}
           {gameState === 'WON' && (
-            <motion.div
-              key="won"
-              initial={{ opacity: 0, scale: 0.95 }}
+            <motion.div 
+              key="won" 
+              className="w-full max-w-md mx-auto bg-[#0d061a] border-2 border-red-500 rounded-lg p-6 shadow-[0_0_20px_rgba(239,68,68,0.35)] text-center space-y-5 mt-20" 
+              initial={{ opacity: 0, scale: 0.95 }} 
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="w-full max-w-lg bg-black border-2 border-red-500 rounded-md p-6 shadow-[0_0_20px_rgba(239,68,68,0.3)] space-y-6 relative"
             >
-              <div className="text-center border-b border-red-950 pb-3">
-                <span className="text-[10px] text-red-500 font-bold uppercase tracking-wider">HANDSHAKE COMPLETE</span>
-                <h2 className="text-slate-100 text-xl font-extrabold uppercase mt-0.5 text-glow-red">
-                  CASE CLOSED
-                </h2>
-              </div>
-
-              <div className="space-y-4">
-                <div className="flex items-center gap-3 bg-red-950/20 border border-red-900/30 rounded p-4 text-xs font-mono text-red-400">
-                  <CheckCircle2 className="w-8 h-8 text-red-500 shrink-0" />
-                  <div className="leading-relaxed">
-                    Obsidian's encryption key thief successfully neutralized. Identified as <span className="text-white font-bold underline">shadow</span>. Audit logs locked down and secure.
-                  </div>
-                </div>
-
-                {/* Case parameters check log */}
-                <div className="flex flex-col gap-1 select-none">
-                  <span className="text-[9px] text-red-500/70 font-bold uppercase tracking-wider">TRAVERSED EVIDENCE FILE:</span>
-                  <div className="bg-slate-950 border border-red-950 rounded p-3 text-[10px] text-slate-400 space-y-1">
-                    <div>$ permissions check secret.key</div>
-                    <div className="text-slate-500 pr-1 pl-3">• -rw-r-----: Owner reads (shadow), Group reads (admins include sam)</div>
-                    <div>$ run secure_audit log grep "secret.key"</div>
-                    <div className="text-slate-500 pr-1 pl-3">• Last accessed record confirms user "shadow" took secret.key</div>
-                    <div className="text-red-400 font-bold">• Case verification: shadow = Infiltrator</div>
-                  </div>
-                </div>
-
-                {/* Educational summary */}
-                <div className="bg-slate-950/80 p-4 rounded text-xs leading-relaxed text-slate-300 text-left font-sans border border-red-900/20">
-                  <span className="text-red-400 font-bold font-mono block mb-1">🛡️ SUMMARY LOG:</span>
-                  You successfully verified UNIX authorization blocks:
-                  <ul className="list-disc pl-4 mt-1 space-y-0.5 font-mono text-[11px] text-slate-400">
-                    <li>Owner shadow (rw-) can read/write</li>
-                    <li>Group admins members like sam (r--) can read</li>
-                    <li>Others (alex, morgan) are locked out (---)</li>
-                    <li>Audit traces pinned actual decryption access to shadow</li>
-                  </ul>
-                </div>
-              </div>
-
-              <div className="flex gap-4 pt-2 select-none">
-                <button
-                  onClick={handleStartMission}
-                  className="flex-1 bg-slate-950 hover:bg-slate-900 text-slate-200 font-bold text-xs py-3 px-3 rounded border border-red-950 hover:border-red-500/50 cursor-pointer flex items-center justify-center gap-1.5 font-mono"
-                >
-                  <RefreshCw className="w-3.5 h-3.5" />
-                  RE-OPEN DOSSIER
-                </button>
-                
-                <button
-                  onClick={() => {
-                    sound.playClick();
-                    alert('CLASSIFIED: Access Portal secure. Proceed gate locked.');
-                  }}
-                  className="flex-1 bg-red-950 hover:bg-red-900 text-red-400 font-bold text-xs py-3 px-3 rounded border-2 border-red-500 flex items-center justify-center gap-1.5 cursor-pointer shadow-sm shadow-red-950/30 hover:shadow-red-500/20 transition-all animate-pulse font-mono"
-                >
-                  PROCEED
-                  <ChevronRight className="w-3.5 h-3.5" />
-                </button>
-              </div>
+              <CheckCircle2 className="w-12 h-12 text-red-400 mx-auto animate-pulse" />
+              <h2 className="text-lg font-bold text-slate-100 uppercase tracking-widest">PERMISSIONS SECURED</h2>
+              <p className="text-sm text-slate-400 font-sans leading-relaxed">
+                Outstanding! You correctly locked down the files using the right permissions.
+              </p>
+              <button
+                onClick={() => {
+                  sound.playToggle();
+                  window.history.pushState({}, '', '/');
+                  window.dispatchEvent(new PopStateEvent('popstate'));
+                }}
+                className="w-full py-3 bg-red-600 hover:bg-red-500 text-white rounded font-bold uppercase cursor-pointer"
+              >
+                RETURN TO ACCESS PORTAL
+              </button>
             </motion.div>
           )}
         </AnimatePresence>
-      </main>
-
-      <footer className="relative z-10 py-2.5 border-t border-cyber-border/30 text-center font-mono text-[9px] text-slate-600 select-none bg-slate-950/20 backdrop-blur-sm">
-        SECURE TRAINING CORE // WHO STOLE THE KEY ACTIVE
-      </footer>
+      </div>
     </div>
   );
-};
-
-export default Modul5Game;
+}

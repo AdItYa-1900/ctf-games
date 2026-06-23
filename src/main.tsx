@@ -47,10 +47,10 @@ const Hub = ({ onNavigate }: { onNavigate: (path: string) => void }) => {
           className="border border-[#23123a] bg-[#0d061a] hover:border-[#a258ff] p-5 rounded-md flex flex-col justify-between space-y-4 cursor-pointer hover:shadow-[0_0_15px_var(--color-neon-purple-glow)] transition-all group animate-none"
         >
           <div className="space-y-1">
-            <span className="text-[9px] text-[#a258ff] font-bold uppercase block tracking-wider">NODE 02 // SECURE SHELL</span>
-            <h3 className="text-slate-200 font-extrabold text-sm uppercase group-hover:text-white">TERMINAL AWAKENING</h3>
+            <span className="text-[9px] text-[#a258ff] font-bold uppercase block tracking-wider">NODE 02 // FIREWALL BUFFER</span>
+            <h3 className="text-slate-200 font-extrabold text-sm uppercase group-hover:text-white">COMMAND CATCH</h3>
             <p className="text-slate-500 font-sans text-xs leading-relaxed">
-              Infiltrate Obsidian's server across 4 hacking sectors. Explore, uncover hidden files, and master the Linux command line.
+              Arcade catching module. Align the bucket with incoming shell command inputs matching objectives.
             </p>
           </div>
           <span className="text-[10px] text-[#a258ff] font-bold uppercase tracking-widest flex items-center gap-1">
