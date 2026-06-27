@@ -1,6 +1,5 @@
 import React from 'react';
 import { Terminal } from 'lucide-react';
-import HackBoxTerminal from './hfbox/HackBoxTerminal';
 
 const MOCK_USER_ID = "user123";
 const MOCK_ROOM_ID = 8; // Module 8 Room
