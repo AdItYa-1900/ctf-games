@@ -1,0 +1,189 @@
+/* ─── MODULE 10: DATACENTER SERVER RACK ─── */
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+.m10-game-container {
+  background-color: #111318;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Share Tech Mono', monospace;
+  user-select: none;
+  padding: 20px;
+}
+
+/* The Rack Frame */
+.m10-server-rack {
+  width: 100%;
+  max-width: 800px;
+  background: #0a0c10;
+  border-left: 20px solid #2a2d34;
+  border-right: 20px solid #2a2d34;
+  border-top: 10px solid #1a1c23;
+  border-bottom: 10px solid #1a1c23;
+  border-radius: 6px;
+  box-shadow: 
+    inset 4px 0 10px rgba(255,255,255,0.05),
+    inset -4px 0 10px rgba(0,0,0,0.8),
+    0 30px 60px rgba(0,0,0,0.9);
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 6px 0;
+}
+
+/* Master Switch (Top Router) */
+.m10-master-switch {
+  height: 100px;
+  background: linear-gradient(180deg, #2a2d34, #1a1c23);
+  border-top: 1px solid #4a4f5c;
+  border-bottom: 3px solid #000;
+  margin: 0 6px;
+  display: flex;
+  align-items: center;
+  padding: 0 25px;
+  box-shadow: inset 0 5px 15px rgba(0,0,0,0.5);
+  gap: 20px;
+}
+
+.m10-switch-logo {
+  color: #7dcfff;
+  font-weight: bold;
+  font-size: 24px;
+  letter-spacing: -1px;
+}
+.m10-switch-logo span {
+  color: #fff;
+  font-weight: normal;
+}
+
+.m10-switch-lcd {
+  flex: 1;
+  background: #050814;
+  border: 3px inset #111;
+  border-radius: 6px;
+  height: 70px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 20px;
+  box-shadow: inset 0 0 20px rgba(0,255,136,0.05);
+}
+
+.m10-lcd-label {
+  color: #565f89;
+  font-size: 11px;
+  text-transform: uppercase;
+  font-family: -apple-system, sans-serif;
+  font-weight: bold;
+  letter-spacing: 1px;
+  margin-bottom: 2px;
+}
+.m10-lcd-data {
+  color: #00ff88;
+  font-size: 26px;
+  text-shadow: 0 0 8px #00ff88;
+  letter-spacing: 2px;
+}
+
+/* Blade Server */
+.m10-blade-server {
+  height: 60px;
+  background: linear-gradient(90deg, #1e2128, #2a2d34, #1e2128);
+  border-top: 1px solid #3a3f4c;
+  border-bottom: 3px solid #050505;
+  margin: 0 6px;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  gap: 20px;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.15s;
+}
+.m10-blade-server:hover {
+  background: linear-gradient(90deg, #2a2d34, #3a3f4c, #2a2d34);
+}
+.m10-blade-server:active {
+  background: linear-gradient(90deg, #1a1c23, #2a2d34, #1a1c23);
+  box-shadow: inset 0 5px 10px rgba(0,0,0,0.5);
+}
+
+/* Hex Mesh Pattern (Cooling Vents) */
+.m10-hex-mesh {
+  flex: 1;
+  height: 40px;
+  background: 
+    radial-gradient(circle, #000 2.5px, transparent 3px) 0 0 / 10px 10px,
+    radial-gradient(circle, #000 2.5px, transparent 3px) 5px 5px / 10px 10px;
+  background-color: #15161e;
+  border: 2px inset #111;
+  border-radius: 4px;
+  box-shadow: inset 0 5px 15px rgba(0,0,0,0.9);
+}
+
+/* Server Labels */
+.m10-blade-label {
+  width: 160px;
+  background: #0a0c10;
+  border: 1px solid #3a3f4c;
+  color: #a9b1d6;
+  font-size: 13px;
+  padding: 6px 10px;
+  border-radius: 3px;
+  text-transform: uppercase;
+  font-weight: bold;
+  text-align: center;
+  box-shadow: inset 0 2px 4px rgba(255,255,255,0.05);
+}
+
+/* LED Indicators */
+.m10-led-array {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 0 12px;
+  background: #050505;
+  height: 30px;
+  border-radius: 15px;
+  border: 1px solid #222;
+  box-shadow: inset 0 2px 5px rgba(0,0,0,0.8);
+}
+.m10-led {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: #222;
+  box-shadow: inset 0 2px 3px rgba(0,0,0,0.8);
+  transition: all 0.3s;
+}
+.m10-led-orange {
+  background: #ff9e64;
+  box-shadow: 0 0 6px #ff9e64, inset 0 2px 3px rgba(255,255,255,0.4);
+}
+.m10-led-green {
+  background: #9ece6a;
+  box-shadow: 0 0 10px #9ece6a, inset 0 2px 3px rgba(255,255,255,0.4);
+}
+.m10-led-red {
+  background: #f7768e;
+  box-shadow: 0 0 10px #f7768e, inset 0 2px 3px rgba(255,255,255,0.4);
+  animation: blink 0.15s infinite alternate;
+}
+.m10-led-blue {
+  background: #7aa2f7;
+  box-shadow: 0 0 10px #7aa2f7, inset 0 2px 3px rgba(255,255,255,0.4);
+  animation: blink 0.4s infinite alternate;
+}
+
+@keyframes blink {
+  0% { opacity: 0.4; }
+  100% { opacity: 1; }
+}
+
+/* Powered State Overrides */
+.m10-blade-powered .m10-blade-label {
+  border-color: #9ece6a;
+  color: #9ece6a;
+  text-shadow: 0 0 5px rgba(158,206,106,0.3);
+}

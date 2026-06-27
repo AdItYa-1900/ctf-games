@@ -9,8 +9,8 @@ import Modul4Game from './Modul4Game.tsx'
 import Modul5Game from './Modul5Game.tsx'
 import Modul6Game from './Modul6Game.tsx'
 import Modul7Game from './Modul7Game.tsx'
-import Modul8Game from './Modul8Game.tsx'
 import Modul9Game from './Modul9Game.tsx'
+import Modul10Game from './Modul10Game.tsx'
 
 const Hub = ({ onNavigate }: { onNavigate: (path: string) => void }) => {
   return (
@@ -145,22 +145,7 @@ const Hub = ({ onNavigate }: { onNavigate: (path: string) => void }) => {
           </span>
         </div>
 
-        {/* Node 8 */}
-        <div 
-          onClick={() => onNavigate('/module8')}
-          className="border border-[#23123a] bg-[#0d061a] hover:border-[#a258ff] p-5 rounded-md flex flex-col justify-between space-y-4 cursor-pointer hover:shadow-[0_0_15px_var(--color-neon-purple-glow)] transition-all group animate-none"
-        >
-          <div className="space-y-1">
-            <span className="text-[9px] text-[#a258ff] font-bold uppercase block tracking-wider">NODE 08 // PRACTICAL LAB</span>
-            <h3 className="text-slate-200 font-extrabold text-sm uppercase group-hover:text-white">KALI LINUX HACKBOX</h3>
-            <p className="text-slate-500 font-sans text-xs leading-relaxed">
-              Initialize an isolated Kali Linux environment to solve practical assessment flags.
-            </p>
-          </div>
-          <span className="text-[10px] text-[#a258ff] font-bold uppercase tracking-widest flex items-center gap-1">
-            ACCESS NODE <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform animate-pulse" />
-          </span>
-        </div>
+
 
         {/* Node 9 */}
         <div 
@@ -172,6 +157,23 @@ const Hub = ({ onNavigate }: { onNavigate: (path: string) => void }) => {
             <h3 className="text-slate-200 font-extrabold text-sm uppercase group-hover:text-white">PACKET FACTORY</h3>
             <p className="text-slate-500 font-sans text-xs leading-relaxed">
               Understand data transit. Sort packets into TCP/UDP pipes and stamp them with the correct OSI layers.
+            </p>
+          </div>
+          <span className="text-[10px] text-[#a258ff] font-bold uppercase tracking-widest flex items-center gap-1">
+            ACCESS NODE <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform animate-pulse" />
+          </span>
+        </div>
+
+        {/* Node 10 */}
+        <div 
+          onClick={() => onNavigate('/module10')}
+          className="border border-[#23123a] bg-[#0d061a] hover:border-[#a258ff] p-5 rounded-md flex flex-col justify-between space-y-4 cursor-pointer hover:shadow-[0_0_15px_var(--color-neon-purple-glow)] transition-all group animate-none"
+        >
+          <div className="space-y-1">
+            <span className="text-[9px] text-[#a258ff] font-bold uppercase block tracking-wider">NODE 10 // OPEN DOORS</span>
+            <h3 className="text-slate-200 font-extrabold text-sm uppercase group-hover:text-white">PORT AUTHORITY</h3>
+            <p className="text-slate-500 font-sans text-xs leading-relaxed">
+              Route incoming traffic to the correct service ports and identify open services on the server terminal.
             </p>
           </div>
           <span className="text-[10px] text-[#a258ff] font-bold uppercase tracking-widest flex items-center gap-1">
@@ -258,16 +260,16 @@ const App = () => {
             MODULE 7
           </span>
           <span 
-            className={`cursor-pointer hover:text-[#a258ff] transition-colors ${cleanPath === '/module8' ? 'text-[#a258ff] font-bold underline underline-offset-4' : 'text-slate-400'}`} 
-            onClick={() => navigateTo('/module8')}
-          >
-            MODULE 8
-          </span>
-          <span 
             className={`cursor-pointer hover:text-[#a258ff] transition-colors ${cleanPath === '/module9' ? 'text-[#a258ff] font-bold underline underline-offset-4' : 'text-slate-400'}`} 
             onClick={() => navigateTo('/module9')}
           >
             MODULE 9
+          </span>
+          <span 
+            className={`cursor-pointer hover:text-[#a258ff] transition-colors ${cleanPath === '/module10' ? 'text-[#a258ff] font-bold underline underline-offset-4' : 'text-slate-400'}`} 
+            onClick={() => navigateTo('/module10')}
+          >
+            MODULE 10
           </span>
         </div>
       </nav>
@@ -281,9 +283,9 @@ const App = () => {
         {cleanPath === '/module5' && <Modul5Game />}
         {cleanPath === '/module6' && <Modul6Game />}
         {cleanPath === '/module7' && <Modul7Game />}
-        {cleanPath === '/module8' && <Modul8Game />}
         {cleanPath === '/module9' && <Modul9Game />}
-        {cleanPath !== '/module1' && cleanPath !== '/module2' && cleanPath !== '/module3' && cleanPath !== '/module4' && cleanPath !== '/module5' && cleanPath !== '/module6' && cleanPath !== '/module7' && cleanPath !== '/module8' && cleanPath !== '/module9' && (
+        {cleanPath === '/module10' && <Modul10Game />}
+        {cleanPath !== '/module1' && cleanPath !== '/module2' && cleanPath !== '/module3' && cleanPath !== '/module4' && cleanPath !== '/module5' && cleanPath !== '/module6' && cleanPath !== '/module7' && cleanPath !== '/module9' && cleanPath !== '/module10' && (
           <Hub onNavigate={navigateTo} />
         )}
       </div>
