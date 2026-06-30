@@ -1,0 +1,352 @@
+/* ─── MODULE 15 REDESIGN: LINK ANALYSIS (DEEP INVESTIGATION) ─── */
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap');
+
+.m15-container {
+  background: radial-gradient(circle at 50% 50%, rgba(162, 88, 255, 0.05) 0%, rgba(5, 1, 14, 0) 80%);
+  background-color: #05010e;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Space Grotesk', sans-serif;
+  user-select: none;
+  min-height: 700px;
+  color: #f1f5f9;
+}
+
+/* ── HUD ── */
+.m15-hud {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 50;
+  pointer-events: none;
+}
+.m15-hud-title {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  color: #64748b;
+  font-weight: bold;
+}
+.m15-hud-controls {
+  pointer-events: auto;
+}
+
+/* ── Layout Grid ── */
+.m15-layout {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 60px 20px 20px;
+  position: relative;
+  z-index: 10;
+}
+
+/* ── Top Bar: Tools Arsenal ── */
+.m15-arsenal-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+  justify-content: center;
+}
+
+.m15-tool-btn {
+  background: #020005;
+  border: 1px solid #23123a;
+  border-radius: 8px;
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  min-width: 150px;
+}
+.m15-tool-btn:hover {
+  background: #1a0b2e;
+  border-color: #334155;
+}
+.m15-tool-btn.active {
+  background: rgba(162, 88, 255, 0.1);
+  border-color: #a258ff;
+  box-shadow: 0 0 15px rgba(162, 88, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+.m15-tool-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: #0d061a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #a258ff;
+  border: 1px solid #23123a;
+}
+.m15-tool-btn.active .m15-tool-icon {
+  background: #a258ff;
+  color: #05010e;
+}
+
+.m15-tool-info {
+  display: flex;
+  flex-direction: column;
+}
+.m15-tool-name {
+  font-size: 11px;
+  font-weight: bold;
+  color: #f1f5f9;
+}
+.m15-tool-desc {
+  font-size: 9px;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* ── Node Canvas (Infinite Panning) ── */
+.m15-canvas-viewport {
+  flex: 1;
+  background: #0d061a;
+  border: 1px solid #23123a;
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 0 30px rgba(0,0,0,0.5);
+  cursor: grab;
+}
+.m15-canvas-viewport:active {
+  cursor: grabbing;
+}
+
+.m15-canvas-layer {
+  position: absolute;
+  top: 0; left: 0;
+  width: 4000px;
+  height: 4000px;
+  transform-origin: 0 0;
+  background-image: radial-gradient(#23123a 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* SVG Line Layer */
+.m15-canvas-svg {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+.m15-edge-line {
+  stroke: #334155;
+  stroke-width: 2;
+  fill: none;
+  stroke-dasharray: 4;
+  animation: m15-dash 20s linear infinite;
+}
+@keyframes m15-dash {
+  to { stroke-dashoffset: -100; }
+}
+
+/* Intelligence Nodes */
+.m15-node {
+  position: absolute;
+  background: #020005;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 180px;
+  cursor: crosshair;
+  z-index: 10;
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.1s;
+  user-select: none;
+}
+.m15-node:hover { border-color: #64748b; }
+.m15-node.targetable:hover {
+  border-color: #a258ff;
+  box-shadow: 0 0 15px rgba(162, 88, 255, 0.4);
+}
+.m15-node.error {
+  animation: m15-shake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+  border-color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
+}
+.m15-node.win-node {
+  border-color: #ef4444;
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.5);
+}
+
+.m15-node-icon {
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.m15-node[data-type="domain"] .m15-node-icon { color: #3b82f6; }
+.m15-node[data-type="email"] .m15-node-icon { color: #f59e0b; }
+.m15-node[data-type="document"] .m15-node-icon { color: #10b981; }
+.m15-node[data-type="org"] .m15-node-icon { color: #94a3b8; }
+.m15-node[data-type="ip"] .m15-node-icon { color: #ef4444; }
+.m15-node[data-type="social"] .m15-node-icon { color: #ec4899; }
+.m15-node[data-type="code"] .m15-node-icon { color: #eab308; }
+
+.m15-node-info {
+  display: flex;
+  flex-direction: column;
+}
+.m15-node-type {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #64748b;
+  font-weight: bold;
+}
+.m15-node-label {
+  font-size: 11px;
+  font-family: monospace;
+  color: #f1f5f9;
+}
+
+/* ── Modals ── */
+.m15-modal-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(5, 1, 14, 0.8);
+  backdrop-filter: blur(4px);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+.m15-modal {
+  background: #0d061a;
+  border: 1px solid #23123a;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+  overflow: hidden;
+}
+.m15-modal-header {
+  background: #1a0b2e;
+  border-bottom: 1px solid #23123a;
+  padding: 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.m15-modal-title {
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #10b981;
+}
+.m15-modal-close {
+  color: #64748b;
+  cursor: pointer;
+}
+.m15-modal-close:hover { color: #ef4444; }
+
+.m15-modal-body-pdf {
+  padding: 24px;
+  background: #f8fafc;
+  color: #334155;
+  font-family: serif;
+  font-size: 14px;
+  line-height: 1.6;
+  height: 350px;
+  overflow-y: auto;
+}
+.m15-modal-body-code {
+  padding: 24px;
+  background: #020005;
+  color: #cbd5e1;
+  font-family: monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  height: 350px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+}
+
+/* Clickable text to extract */
+.m15-extractable-text {
+  background: rgba(162, 88, 255, 0.2);
+  border-bottom: 2px dashed #a258ff;
+  cursor: crosshair;
+  padding: 0 4px;
+  transition: all 0.2s;
+  font-family: monospace;
+  font-weight: bold;
+  color: #a258ff;
+}
+.m15-extractable-text:hover {
+  background: rgba(162, 88, 255, 0.4);
+}
+.m15-extractable-text.extracted {
+  background: rgba(16, 185, 129, 0.2);
+  border-bottom: 2px solid #10b981;
+  color: #10b981;
+  cursor: default;
+}
+
+/* Floating Error Toast */
+.m15-error-toast {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #ef4444;
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  animation: m15-fadeUp 2s forwards;
+  z-index: 100;
+  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.5);
+}
+@keyframes m15-fadeUp {
+  0% { opacity: 0; transform: translate(-50%, 10px); }
+  10% { opacity: 1; transform: translate(-50%, 0); }
+  90% { opacity: 1; transform: translate(-50%, 0); }
+  100% { opacity: 0; transform: translate(-50%, -10px); }
+}
+
+@keyframes m15-shake {
+  10%, 90% { transform: translate3d(-1px, 0, 0); }
+  20%, 80% { transform: translate3d(2px, 0, 0); }
+  30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+  40%, 60% { transform: translate3d(4px, 0, 0); }
+}
+
+.m15-target-btn {
+  margin-top: 10px;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid #ef4444;
+  color: #ef4444;
+  padding: 4px 8px;
+  font-size: 9px;
+  text-transform: uppercase;
+  font-weight: bold;
+  border-radius: 2px;
+  cursor: pointer;
+}
+.m15-target-btn:hover { background: #ef4444; color: white; }

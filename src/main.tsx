@@ -11,6 +11,12 @@ import Modul6Game from './Modul6Game.tsx'
 import Modul7Game from './Modul7Game.tsx'
 import Modul9Game from './Modul9Game.tsx'
 import Modul10Game from './Modul10Game.tsx'
+import Modul11Game from './Modul11Game.tsx'
+import Modul12Game from './Modul12Game.tsx'
+import Modul13Game from './Modul13Game.tsx'
+import Modul14Game from './Modul14Game.tsx'
+import Modul15Game from './Modul15Game.tsx'
+import Modul16Game from './Modul16Game.tsx'
 
 const Hub = ({ onNavigate }: { onNavigate: (path: string) => void }) => {
   return (
@@ -180,6 +186,108 @@ const Hub = ({ onNavigate }: { onNavigate: (path: string) => void }) => {
             ACCESS NODE <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform animate-pulse" />
           </span>
         </div>
+
+        {/* Node 11 */}
+        <div 
+          onClick={() => onNavigate('/module11')}
+          className="border border-[#23123a] bg-[#0d061a] hover:border-[#a258ff] p-5 rounded-md flex flex-col justify-between space-y-4 cursor-pointer hover:shadow-[0_0_15px_var(--color-neon-purple-glow)] transition-all group animate-none"
+        >
+          <div className="space-y-1">
+            <span className="text-[9px] text-[#a258ff] font-bold uppercase block tracking-wider">NODE 11 // NETWORK MAPPER</span>
+            <h3 className="text-slate-200 font-extrabold text-sm uppercase group-hover:text-white">NMAP RECON</h3>
+            <p className="text-slate-500 font-sans text-xs leading-relaxed">
+              Master Nmap scanning. Select flags, read scan output, and identify vulnerable services on target servers.
+            </p>
+          </div>
+          <span className="text-[10px] text-[#a258ff] font-bold uppercase tracking-widest flex items-center gap-1">
+            ACCESS NODE <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform animate-pulse" />
+          </span>
+        </div>
+
+        {/* Node 12 */}
+        <div 
+          onClick={() => onNavigate('/module12')}
+          className="border border-[#23123a] bg-[#0d061a] hover:border-[#a258ff] p-5 rounded-md flex flex-col justify-between space-y-4 cursor-pointer hover:shadow-[0_0_15px_var(--color-neon-purple-glow)] transition-all group animate-none"
+        >
+          <div className="space-y-1">
+            <span className="text-[9px] text-[#a258ff] font-bold uppercase block tracking-wider">NODE 12 // PATH ANALYSIS</span>
+            <h3 className="text-slate-200 font-extrabold text-sm uppercase group-hover:text-white">RADIO SILENCE</h3>
+            <p className="text-slate-500 font-sans text-xs leading-relaxed">
+              Trace network hops to triage unreachable targets. Differentiate between local faults, broken paths, and stealth filtering.
+            </p>
+          </div>
+          <span className="text-[10px] text-[#a258ff] font-bold uppercase tracking-widest flex items-center gap-1">
+            ACCESS NODE <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform animate-pulse" />
+          </span>
+        </div>
+
+        {/* Node 13 */}
+        <div 
+          onClick={() => onNavigate('/module13')}
+          className="border border-[#23123a] bg-[#0d061a] hover:border-[#a258ff] p-5 rounded-md flex flex-col justify-between space-y-4 cursor-pointer hover:shadow-[0_0_15px_var(--color-neon-purple-glow)] transition-all group animate-none"
+        >
+          <div className="space-y-1">
+            <span className="text-[9px] text-[#a258ff] font-bold uppercase block tracking-wider">NODE 13 // PACKET CAPTURE</span>
+            <h3 className="text-slate-200 font-extrabold text-sm uppercase group-hover:text-white">CROSSED WIRES</h3>
+            <p className="text-slate-500 font-sans text-xs leading-relaxed">
+              Analyze a packet capture to reconstruct TCP streams. Differentiate between cleartext HTTP and encrypted HTTPS decoys.
+            </p>
+          </div>
+          <span className="text-[10px] text-[#a258ff] font-bold uppercase tracking-widest flex items-center gap-1">
+            ACCESS NODE <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform animate-pulse" />
+          </span>
+        </div>
+
+        {/* Node 14 */}
+        <div 
+          onClick={() => onNavigate('/module14')}
+          className="border border-[#23123a] bg-[#0d061a] hover:border-[#a258ff] p-5 rounded-md flex flex-col justify-between space-y-4 cursor-pointer hover:shadow-[0_0_15px_var(--color-neon-purple-glow)] transition-all group animate-none"
+        >
+          <div className="space-y-1">
+            <span className="text-[9px] text-[#a258ff] font-bold uppercase block tracking-wider">NODE 14 // DNS RECON</span>
+            <h3 className="text-slate-200 font-extrabold text-sm uppercase group-hover:text-white">ZONE TRANSFER</h3>
+            <p className="text-slate-500 font-sans text-xs leading-relaxed">
+              Use dig to query DNS records. Identify Name Servers and execute zone transfers to expose hidden subdomains.
+            </p>
+          </div>
+          <span className="text-[10px] text-[#a258ff] font-bold uppercase tracking-widest flex items-center gap-1">
+            ACCESS NODE <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform animate-pulse" />
+          </span>
+        </div>
+
+        {/* Node 15 */}
+        <div 
+          onClick={() => onNavigate('/module15')}
+          className="border border-[#23123a] bg-[#0d061a] hover:border-[#a258ff] p-5 rounded-md flex flex-col justify-between space-y-4 cursor-pointer hover:shadow-[0_0_15px_var(--color-neon-purple-glow)] transition-all group animate-none"
+        >
+          <div className="space-y-1">
+            <span className="text-[9px] text-[#a258ff] font-bold uppercase block tracking-wider">NODE 15 // OSINT</span>
+            <h3 className="text-slate-200 font-extrabold text-sm uppercase group-hover:text-white">OSINT FRAMEWORK</h3>
+            <p className="text-slate-500 font-sans text-xs leading-relaxed">
+              Use whois, Google Dorks, theHarvester, and Shodan to passively gather intelligence and build a target profile.
+            </p>
+          </div>
+          <span className="text-[10px] text-[#a258ff] font-bold uppercase tracking-widest flex items-center gap-1">
+            ACCESS NODE <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform animate-pulse" />
+          </span>
+        </div>
+        
+        {/* Node 16 */}
+        <div 
+          onClick={() => onNavigate('/module16')}
+          className="border border-[#23123a] bg-[#0d061a] hover:border-[#a258ff] p-5 rounded-md flex flex-col justify-between space-y-4 cursor-pointer hover:shadow-[0_0_15px_var(--color-neon-purple-glow)] transition-all group animate-none"
+        >
+          <div className="space-y-1">
+            <span className="text-[9px] text-[#a258ff] font-bold uppercase block tracking-wider">NODE 16 // WEB PROXY</span>
+            <h3 className="text-slate-200 font-extrabold text-sm uppercase group-hover:text-white">THE INTERCEPTOR</h3>
+            <p className="text-slate-500 font-sans text-xs leading-relaxed">
+              Master the Burp Suite proxy. Intercept and manipulate raw HTTP traffic between a client and an Obsidian server.
+            </p>
+          </div>
+          <span className="text-[10px] text-[#a258ff] font-bold uppercase tracking-widest flex items-center gap-1">
+            ACCESS NODE <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform animate-pulse" />
+          </span>
+        </div>
       </div>
       
       <div className="text-[9px] text-slate-600 font-mono tracking-widest border-t border-[#23123a] pt-4 w-full text-center">
@@ -271,6 +379,42 @@ const App = () => {
           >
             MODULE 10
           </span>
+          <span 
+            className={`cursor-pointer hover:text-[#a258ff] transition-colors ${cleanPath === '/module11' ? 'text-[#a258ff] font-bold underline underline-offset-4' : 'text-slate-400'}`} 
+            onClick={() => navigateTo('/module11')}
+          >
+            MODULE 11
+          </span>
+          <span 
+            className={`cursor-pointer hover:text-[#a258ff] transition-colors ${cleanPath === '/module12' ? 'text-[#a258ff] font-bold underline underline-offset-4' : 'text-slate-400'}`} 
+            onClick={() => navigateTo('/module12')}
+          >
+            MODULE 12
+          </span>
+          <span 
+            className={`cursor-pointer hover:text-[#a258ff] transition-colors ${cleanPath === '/module13' ? 'text-[#a258ff] font-bold underline underline-offset-4' : 'text-slate-400'}`} 
+            onClick={() => navigateTo('/module13')}
+          >
+            MODULE 13
+          </span>
+          <span 
+            className={`cursor-pointer hover:text-[#a258ff] transition-colors ${cleanPath === '/module14' ? 'text-[#a258ff] font-bold underline underline-offset-4' : 'text-slate-400'}`} 
+            onClick={() => navigateTo('/module14')}
+          >
+            MODULE 14
+          </span>
+          <span 
+            className={`cursor-pointer hover:text-[#a258ff] transition-colors ${cleanPath === '/module15' ? 'text-[#a258ff] font-bold underline underline-offset-4' : 'text-slate-400'}`} 
+            onClick={() => navigateTo('/module15')}
+          >
+            MODULE 15
+          </span>
+          <span 
+            className={`cursor-pointer hover:text-[#a258ff] transition-colors ${cleanPath === '/module16' ? 'text-[#a258ff] font-bold underline underline-offset-4' : 'text-slate-400'}`} 
+            onClick={() => navigateTo('/module16')}
+          >
+            MODULE 16
+          </span>
         </div>
       </nav>
 
@@ -285,7 +429,13 @@ const App = () => {
         {cleanPath === '/module7' && <Modul7Game />}
         {cleanPath === '/module9' && <Modul9Game />}
         {cleanPath === '/module10' && <Modul10Game />}
-        {cleanPath !== '/module1' && cleanPath !== '/module2' && cleanPath !== '/module3' && cleanPath !== '/module4' && cleanPath !== '/module5' && cleanPath !== '/module6' && cleanPath !== '/module7' && cleanPath !== '/module9' && cleanPath !== '/module10' && (
+        {cleanPath === '/module11' && <Modul11Game />}
+        {cleanPath === '/module12' && <Modul12Game />}
+        {cleanPath === '/module13' && <Modul13Game />}
+        {cleanPath === '/module14' && <Modul14Game />}
+        {cleanPath === '/module15' && <Modul15Game />}
+        {cleanPath === '/module16' && <Modul16Game />}
+        {cleanPath !== '/module1' && cleanPath !== '/module2' && cleanPath !== '/module3' && cleanPath !== '/module4' && cleanPath !== '/module5' && cleanPath !== '/module6' && cleanPath !== '/module7' && cleanPath !== '/module9' && cleanPath !== '/module10' && cleanPath !== '/module11' && cleanPath !== '/module12' && cleanPath !== '/module13' && cleanPath !== '/module14' && cleanPath !== '/module15' && cleanPath !== '/module16' && (
           <Hub onNavigate={navigateTo} />
         )}
       </div>

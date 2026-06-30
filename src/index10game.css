@@ -1,189 +1,451 @@
-/* ─── MODULE 10: DATACENTER SERVER RACK ─── */
-@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+/* ─── MODULE 10: DATACENTER SERVER RACK — PREMIUM ─── */
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap');
 
+/* ── Ambient Environment ── */
 .m10-game-container {
-  background-color: #111318;
+  background: radial-gradient(circle at 50% 50%, rgba(162, 88, 255, 0.08) 0%, rgba(5, 1, 14, 0) 80%);
+  background-color: #05010e;
   position: relative;
   overflow: hidden;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  font-family: 'Share Tech Mono', monospace;
+  font-family: 'Space Grotesk', sans-serif;
   user-select: none;
-  padding: 20px;
+  padding: 20px 20px 10px;
+  min-height: 700px;
 }
 
-/* The Rack Frame */
+/* Ambient ceiling light spill */
+.m10-game-container::before {
+  content: '';
+  position: absolute;
+  top: -80px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 500px;
+  height: 200px;
+  background: radial-gradient(ellipse, rgba(162, 88, 255, 0.08) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Floating dust particles */
+.m10-particle {
+  position: absolute;
+  width: 2px; height: 2px;
+  background: rgba(162, 88, 255, 0.3);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 2;
+  animation: m10-float-particle linear infinite;
+}
+@keyframes m10-float-particle {
+  0%   { transform: translateY(0) translateX(0); opacity: 0; }
+  20%  { opacity: 1; }
+  80%  { opacity: 0.5; }
+  100% { transform: translateY(-400px) translateX(30px); opacity: 0; }
+}
+
+/* ── The Rack Frame ── */
 .m10-server-rack {
   width: 100%;
-  max-width: 800px;
-  background: #0a0c10;
-  border-left: 20px solid #2a2d34;
-  border-right: 20px solid #2a2d34;
-  border-top: 10px solid #1a1c23;
-  border-bottom: 10px solid #1a1c23;
-  border-radius: 6px;
-  box-shadow: 
-    inset 4px 0 10px rgba(255,255,255,0.05),
-    inset -4px 0 10px rgba(0,0,0,0.8),
-    0 30px 60px rgba(0,0,0,0.9);
+  max-width: 820px;
+  background:
+    linear-gradient(180deg, #0d061a 0%, #05010e 100%);
+  border-left: 22px solid;
+  border-right: 22px solid;
+  border-image: linear-gradient(180deg, #23123a, #1a0b2e, #23123a) 1;
+  border-top: 12px solid #1a0b2e;
+  border-bottom: 12px solid #0d061a;
+  border-radius: 8px;
+  box-shadow:
+    inset 5px 0 20px rgba(255,255,255,0.03),
+    inset -5px 0 20px rgba(0,0,0,0.9),
+    0 40px 80px rgba(0,0,0,0.95),
+    0 0 120px rgba(0,100,255,0.04);
   display: flex;
   flex-direction: column;
-  gap: 5px;
-  padding: 6px 0;
+  gap: 4px;
+  padding: 8px 0;
+  position: relative;
+  z-index: 10;
 }
 
-/* Master Switch (Top Router) */
+/* Rack screw details (top corners) */
+.m10-server-rack::before,
+.m10-server-rack::after {
+  content: '⊕';
+  position: absolute;
+  top: 6px;
+  font-size: 10px;
+  color: #4a5568;
+  z-index: 5;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+}
+.m10-server-rack::before { left: 8px; }
+.m10-server-rack::after { right: 8px; }
+
+/* ── Master Switch (Top Router) ── */
 .m10-master-switch {
-  height: 100px;
-  background: linear-gradient(180deg, #2a2d34, #1a1c23);
-  border-top: 1px solid #4a4f5c;
-  border-bottom: 3px solid #000;
-  margin: 0 6px;
+  height: 110px;
+  background:
+    linear-gradient(180deg, #1a0b2e 0%, #0d061a 40%, #05010e 100%);
+  border-top: 1px solid #23123a;
+  border-bottom: 4px solid #000;
+  margin: 0 8px;
+  border-radius: 4px;
   display: flex;
   align-items: center;
-  padding: 0 25px;
-  box-shadow: inset 0 5px 15px rgba(0,0,0,0.5);
+  padding: 0 24px;
+  box-shadow:
+    inset 0 1px 0 rgba(162, 88, 255, 0.08),
+    inset 0 -3px 8px rgba(0,0,0,0.6),
+    0 4px 12px rgba(0,0,0,0.5);
   gap: 20px;
+  position: relative;
 }
 
 .m10-switch-logo {
-  color: #7dcfff;
-  font-weight: bold;
-  font-size: 24px;
-  letter-spacing: -1px;
+  color: #a258ff;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 900;
+  font-size: 16px;
+  letter-spacing: 2px;
+  text-shadow: 0 0 12px rgba(162, 88, 255, 0.4);
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
 }
 .m10-switch-logo span {
-  color: #fff;
-  font-weight: normal;
+  color: #a9b1d6;
+  font-weight: 400;
+  font-size: 10px;
+  letter-spacing: 4px;
 }
 
+/* LCD Screen */
 .m10-switch-lcd {
   flex: 1;
-  background: #050814;
-  border: 3px inset #111;
+  background: #000000;
+  border: 3px solid #1a0b2e;
   border-radius: 6px;
-  height: 70px;
+  height: 72px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 0 20px;
-  box-shadow: inset 0 0 20px rgba(0,255,136,0.05);
+  padding: 0 22px;
+  box-shadow:
+    inset 0 0 30px rgba(16, 185, 129, 0.06),
+    0 0 8px rgba(0,0,0,0.5);
+  position: relative;
+  overflow: hidden;
+}
+
+/* LCD scanline overlay */
+.m10-switch-lcd::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.15) 2px,
+    rgba(0,0,0,0.15) 4px
+  );
+  pointer-events: none;
 }
 
 .m10-lcd-label {
-  color: #565f89;
-  font-size: 11px;
+  color: #4a5568;
+  font-size: 10px;
   text-transform: uppercase;
   font-family: -apple-system, sans-serif;
-  font-weight: bold;
-  letter-spacing: 1px;
-  margin-bottom: 2px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  margin-bottom: 4px;
 }
 .m10-lcd-data {
-  color: #00ff88;
-  font-size: 26px;
-  text-shadow: 0 0 8px #00ff88;
-  letter-spacing: 2px;
+  color: #10b981;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  text-shadow: 0 0 12px #10b981, 0 0 40px rgba(16, 185, 129, 0.3);
+  letter-spacing: 4px;
+  animation: m10-lcd-flicker 3s infinite;
 }
 
-/* Blade Server */
+@keyframes m10-lcd-flicker {
+  0%, 100% { opacity: 1; }
+  96% { opacity: 1; }
+  97% { opacity: 0.7; }
+  98% { opacity: 1; }
+}
+
+/* ── Blade Server ── */
 .m10-blade-server {
-  height: 60px;
-  background: linear-gradient(90deg, #1e2128, #2a2d34, #1e2128);
-  border-top: 1px solid #3a3f4c;
+  height: 62px;
+  background:
+    linear-gradient(180deg, #1a0b2e 0%, #0d061a 50%, #05010e 100%);
+  border-top: 1px solid rgba(162, 88, 255, 0.06);
   border-bottom: 3px solid #050505;
-  margin: 0 6px;
+  margin: 0 8px;
+  border-radius: 3px;
   display: flex;
   align-items: center;
-  padding: 0 20px;
-  gap: 20px;
+  padding: 0 16px;
+  gap: 14px;
   cursor: pointer;
   position: relative;
-  transition: all 0.15s;
-}
-.m10-blade-server:hover {
-  background: linear-gradient(90deg, #2a2d34, #3a3f4c, #2a2d34);
-}
-.m10-blade-server:active {
-  background: linear-gradient(90deg, #1a1c23, #2a2d34, #1a1c23);
-  box-shadow: inset 0 5px 10px rgba(0,0,0,0.5);
+  transition: all 0.2s ease;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.04),
+    0 2px 6px rgba(0,0,0,0.3);
 }
 
-/* Hex Mesh Pattern (Cooling Vents) */
+.m10-blade-server::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 4px;
+  background: transparent;
+  border-radius: 3px 0 0 3px;
+  transition: background 0.3s;
+}
+
+.m10-blade-server:hover {
+  background:
+    linear-gradient(180deg, #23123a 0%, #1a0b2e 50%, #0d061a 100%);
+  transform: translateX(3px);
+  box-shadow:
+    inset 0 1px 0 rgba(162, 88, 255, 0.08),
+    0 4px 16px rgba(0,0,0,0.5),
+    -3px 0 12px rgba(162, 88, 255, 0.06);
+}
+
+.m10-blade-server:active {
+  transform: translateX(1px) scale(0.998);
+  box-shadow:
+    inset 0 3px 10px rgba(0,0,0,0.6);
+}
+
+/* Powered blade glow bar */
+.m10-blade-powered::before {
+  background: linear-gradient(180deg, #10b981, #059669);
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+}
+.m10-blade-powered {
+  background:
+    linear-gradient(180deg, #0f1c16 0%, #0a130f 50%, #070d0a 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(16, 185, 129, 0.1),
+    0 0 20px rgba(16, 185, 129, 0.06);
+}
+
+/* ── Rack Unit Number ── */
+.m10-rack-unit {
+  width: 22px;
+  text-align: center;
+  color: #64748b;
+  font-size: 10px;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+/* ── Hex Mesh Pattern (Cooling Vents) ── */
 .m10-hex-mesh {
   flex: 1;
-  height: 40px;
-  background: 
-    radial-gradient(circle, #000 2.5px, transparent 3px) 0 0 / 10px 10px,
-    radial-gradient(circle, #000 2.5px, transparent 3px) 5px 5px / 10px 10px;
-  background-color: #15161e;
-  border: 2px inset #111;
-  border-radius: 4px;
-  box-shadow: inset 0 5px 15px rgba(0,0,0,0.9);
+  height: 38px;
+  background:
+    radial-gradient(circle, #000 2px, transparent 2.5px) 0 0 / 8px 8px,
+    radial-gradient(circle, #000 2px, transparent 2.5px) 4px 4px / 8px 8px;
+  background-color: #12141a;
+  border: 2px solid #0a0c10;
+  border-radius: 3px;
+  box-shadow:
+    inset 0 4px 12px rgba(0,0,0,0.9),
+    inset 0 -2px 6px rgba(0,0,0,0.6);
+  position: relative;
 }
 
-/* Server Labels */
+
+
+/* ── Server Labels ── */
 .m10-blade-label {
-  width: 160px;
-  background: #0a0c10;
-  border: 1px solid #3a3f4c;
-  color: #a9b1d6;
-  font-size: 13px;
+  width: 150px;
+  background: linear-gradient(135deg, #0d061a, #05010e);
+  border: 1px solid #23123a;
+  color: #8a9ba8;
+  font-size: 12px;
   padding: 6px 10px;
   border-radius: 3px;
   text-transform: uppercase;
   font-weight: bold;
   text-align: center;
-  box-shadow: inset 0 2px 4px rgba(255,255,255,0.05);
+  letter-spacing: 1px;
+  box-shadow:
+    inset 0 1px 3px rgba(0,0,0,0.6),
+    0 1px 0 rgba(255,255,255,0.03);
+  transition: all 0.3s;
+  flex-shrink: 0;
 }
 
-/* LED Indicators */
-.m10-led-array {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  padding: 0 12px;
-  background: #050505;
-  height: 30px;
-  border-radius: 15px;
-  border: 1px solid #222;
-  box-shadow: inset 0 2px 5px rgba(0,0,0,0.8);
-}
-.m10-led {
-  width: 10px; height: 10px;
-  border-radius: 50%;
-  background: #222;
-  box-shadow: inset 0 2px 3px rgba(0,0,0,0.8);
+/* Port badge on each blade */
+.m10-port-badge {
+  background: #0a0c10;
+  border: 1px solid #2a2d34;
+  color: #565f89;
+  font-size: 11px;
+  font-weight: bold;
+  padding: 4px 8px;
+  border-radius: 3px;
+  letter-spacing: 1px;
+  flex-shrink: 0;
   transition: all 0.3s;
 }
-.m10-led-orange {
-  background: #ff9e64;
-  box-shadow: 0 0 6px #ff9e64, inset 0 2px 3px rgba(255,255,255,0.4);
-}
-.m10-led-green {
-  background: #9ece6a;
-  box-shadow: 0 0 10px #9ece6a, inset 0 2px 3px rgba(255,255,255,0.4);
-}
-.m10-led-red {
-  background: #f7768e;
-  box-shadow: 0 0 10px #f7768e, inset 0 2px 3px rgba(255,255,255,0.4);
-  animation: blink 0.15s infinite alternate;
-}
-.m10-led-blue {
-  background: #7aa2f7;
-  box-shadow: 0 0 10px #7aa2f7, inset 0 2px 3px rgba(255,255,255,0.4);
-  animation: blink 0.4s infinite alternate;
+
+.m10-blade-powered .m10-port-badge {
+  border-color: #10b981;
+  color: #10b981;
+  text-shadow: 0 0 6px rgba(16, 185, 129, 0.4);
 }
 
-@keyframes blink {
+/* Ethernet connector indicator */
+.m10-eth-connector {
+  width: 16px; height: 10px;
+  border: 1px solid #3a3f4c;
+  border-radius: 2px;
+  background: #0a0c10;
+  position: relative;
+  flex-shrink: 0;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.5);
+}
+.m10-eth-connector::after {
+  content: '';
+  position: absolute;
+  bottom: 1px; left: 50%;
+  transform: translateX(-50%);
+  width: 4px; height: 3px;
+  background: #23123a;
+  border-radius: 1px;
+}
+.m10-blade-powered .m10-eth-connector {
+  border-color: #10b981;
+}
+.m10-blade-powered .m10-eth-connector::after {
+  background: #10b981;
+  box-shadow: 0 0 4px #10b981;
+}
+
+/* ── LED Indicators ── */
+.m10-led-array {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  padding: 0 10px;
+  background: linear-gradient(180deg, #080808, #050505);
+  height: 28px;
+  border-radius: 14px;
+  border: 1px solid #1a1a1a;
+  box-shadow:
+    inset 0 2px 5px rgba(0,0,0,0.9),
+    0 1px 0 rgba(255,255,255,0.03);
+  flex-shrink: 0;
+}
+
+.m10-led {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #1a1a1a;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.8);
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.m10-led-orange {
+  background: radial-gradient(circle at 35% 35%, #eab308, #ca8a04);
+  box-shadow: 0 0 6px #ca8a04, 0 0 2px #ca8a04, inset 0 1px 2px rgba(255,255,255,0.5);
+}
+
+.m10-led-green {
+  background: radial-gradient(circle at 35% 35%, #34d399, #10b981);
+  box-shadow: 0 0 12px #10b981, 0 0 4px #10b981, inset 0 1px 2px rgba(255,255,255,0.5);
+}
+
+.m10-led-red {
+  background: radial-gradient(circle at 35% 35%, #f87171, #ef4444);
+  box-shadow: 0 0 12px #ef4444, 0 0 4px #ef4444, inset 0 1px 2px rgba(255,255,255,0.5);
+  animation: m10-blink 0.15s infinite alternate;
+}
+
+.m10-led-blue {
+  background: radial-gradient(circle at 35% 35%, #c084fc, #a258ff);
+  box-shadow: 0 0 12px #a258ff, 0 0 4px #a258ff, inset 0 1px 2px rgba(255,255,255,0.5);
+  animation: m10-blink 0.4s infinite alternate;
+}
+
+@keyframes m10-blink {
   0% { opacity: 0.4; }
   100% { opacity: 1; }
 }
 
-/* Powered State Overrides */
+/* ── Powered State Overrides ── */
 .m10-blade-powered .m10-blade-label {
-  border-color: #9ece6a;
-  color: #9ece6a;
-  text-shadow: 0 0 5px rgba(158,206,106,0.3);
+  border-color: rgba(16, 185, 129, 0.4);
+  color: #10b981;
+  text-shadow: 0 0 6px rgba(16, 185, 129, 0.3);
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.05));
+}
+
+/* ── Progress Meter ── */
+.m10-progress-bar-container {
+  width: 100%;
+  max-width: 820px;
+  height: 6px;
+  background: #0a0c10;
+  border-radius: 3px;
+  margin-top: 12px;
+  overflow: hidden;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.8);
+  z-index: 10;
+}
+
+.m10-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #10b981, #34d399, #10b981);
+  background-size: 200% 100%;
+  border-radius: 3px;
+  transition: width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+  animation: m10-progress-shimmer 2s linear infinite;
+}
+
+@keyframes m10-progress-shimmer {
+  from { background-position: 200% 0; }
+  to   { background-position: -200% 0; }
+}
+
+/* ── Status Footer ── */
+.m10-status-footer {
+  width: 100%;
+  max-width: 820px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+  padding: 0 4px;
+  z-index: 10;
+}
+
+.m10-status-text {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #64748b;
+  font-weight: bold;
+}
+
+.m10-status-text span {
+  color: #10b981;
 }

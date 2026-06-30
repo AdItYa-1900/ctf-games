@@ -1,0 +1,537 @@
+/* ─── MODULE 16: THE INTERCEPTOR (ULTIMATE UI/UX) ─── */
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+.m16-container {
+  background-color: #020005;
+  background-image: 
+    radial-gradient(circle at top right, rgba(139, 92, 246, 0.15), transparent 40%),
+    radial-gradient(circle at bottom left, rgba(239, 68, 68, 0.1), transparent 40%),
+    linear-gradient(rgba(139, 92, 246, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(139, 92, 246, 0.05) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Space Grotesk', sans-serif;
+  user-select: none;
+  min-height: 800px;
+  color: #f1f5f9;
+  border-radius: 16px;
+  box-shadow: inset 0 0 100px rgba(0,0,0,0.9);
+}
+
+/* Ambient Particles */
+.m16-particle {
+  position: absolute;
+  background: rgba(139, 92, 246, 0.4);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: m16-float linear infinite;
+  box-shadow: 0 0 12px rgba(139, 92, 246, 0.5);
+}
+@keyframes m16-float {
+  0% { transform: translateY(0) translateX(0); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(-120px) translateX(30px); opacity: 0; }
+}
+
+
+/* ── HUD ── */
+.m16-hud {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  padding: 20px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 50;
+  pointer-events: none;
+}
+.m16-hud-title {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  color: #c4b5fd;
+  font-weight: bold;
+  text-shadow: 0 0 10px rgba(139,92,246,0.5);
+}
+.m16-hud-controls {
+  pointer-events: auto;
+}
+
+/* ── Main Layout ── */
+.m16-game-layout {
+  display: flex;
+  padding: 80px 24px 24px;
+  gap: 30px;
+  flex: 1;
+  height: 100%;
+  position: relative;
+  z-index: 10;
+}
+
+/* ── Left Panel: Target Application (Hostile Obsidian) ── */
+.m16-browser-panel {
+  flex: 1;
+  background: linear-gradient(135deg, #050101, #120303);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 25px 60px rgba(0,0,0,0.8), 0 0 40px rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  position: relative;
+}
+.m16-browser-header {
+  background: rgba(239, 68, 68, 0.05);
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(239, 68, 68, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.m16-browser-dots {
+  display: flex;
+  gap: 6px;
+}
+.m16-browser-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  opacity: 0.6;
+}
+.m16-browser-dot.red { background: #ef4444; }
+.m16-browser-dot.yellow { background: #eab308; }
+.m16-browser-dot.green { background: #10b981; }
+.m16-browser-url {
+  flex: 1;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(239, 68, 68, 0.15);
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 12px;
+  color: #fca5a5;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  letter-spacing: 0.5px;
+}
+.m16-browser-content {
+  flex: 1;
+  position: relative;
+  background-image: 
+    linear-gradient(rgba(239, 68, 68, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(239, 68, 68, 0.03) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* Fake Web App Styling */
+.m16-webapp {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 40px;
+}
+.m16-webapp-logo {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 36px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: #ef4444;
+  margin-bottom: 30px;
+  text-shadow: 0 0 20px rgba(239, 68, 68, 0.5);
+}
+.m16-webapp-box {
+  background: rgba(10, 0, 0, 0.8);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 8px;
+  padding: 30px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: inset 0 0 30px rgba(239,68,68,0.05);
+}
+.m16-webapp-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  color: #fca5a5;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+.m16-webapp-btn {
+  width: 100%;
+  background: rgba(239, 68, 68, 0.1);
+  color: #fca5a5;
+  border: 1px solid #ef4444;
+  padding: 14px;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 13px;
+}
+.m16-webapp-btn:hover { 
+  background: rgba(239, 68, 68, 0.25); 
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.4); 
+  text-shadow: 0 0 5px rgba(255,255,255,0.5);
+}
+.m16-webapp-input {
+  width: 100%;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  background: rgba(0, 0, 0, 0.5);
+  color: #fca5a5;
+  border-radius: 4px;
+  padding: 12px;
+  margin-bottom: 12px;
+  font-size: 14px;
+  font-family: 'Share Tech Mono', monospace;
+  transition: border-color 0.2s;
+}
+.m16-webapp-input:disabled { opacity: 0.7; border-color: rgba(239, 68, 68, 0.1); }
+.m16-spinner {
+  border: 2px solid rgba(239, 68, 68, 0.1);
+  border-top-color: #ef4444;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  animation: m16-spin 1s linear infinite;
+  margin: 0 auto;
+}
+
+
+/* ── Right Panel: Sentinel Proxy (Premium Glassmorphism) ── */
+.m16-proxy-panel {
+  flex: 1;
+  background: rgba(13, 6, 26, 0.85);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 25px 60px rgba(0,0,0,0.8), 0 0 40px rgba(139, 92, 246, 0.15);
+  border: 1px solid rgba(139, 92, 246, 0.4);
+  position: relative;
+  z-index: 10;
+  backdrop-filter: blur(15px);
+  transition: box-shadow 0.3s ease;
+}
+.m16-proxy-panel.proxy-active {
+  box-shadow: 0 25px 60px rgba(0,0,0,0.8), 0 0 60px rgba(139, 92, 246, 0.3);
+  border-color: rgba(139, 92, 246, 0.7);
+}
+.m16-proxy-header {
+  background: linear-gradient(90deg, rgba(139, 92, 246, 0.15), rgba(13, 6, 26, 0));
+  padding: 14px 20px;
+  border-bottom: 1px solid rgba(139, 92, 246, 0.3);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.m16-proxy-title {
+  font-family: 'Space Grotesk', sans-serif;
+  color: #10b981;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-shadow: 0 0 10px rgba(16,185,129,0.4);
+}
+.m16-proxy-toolbar {
+  padding: 14px 20px;
+  background: rgba(0, 0, 0, 0.3);
+  border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+.m16-proxy-toggle {
+  background: rgba(139, 92, 246, 0.1);
+  color: #c4b5fd;
+  border: 1px solid rgba(139, 92, 246, 0.4);
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: inset 0 0 10px rgba(139,92,246,0.1);
+}
+.m16-proxy-toggle:hover {
+  background: rgba(139, 92, 246, 0.2);
+}
+.m16-proxy-toggle.active {
+  background: rgba(239, 68, 68, 0.15);
+  border-color: #ef4444;
+  color: #fca5a5;
+  box-shadow: inset 0 0 15px rgba(239,68,68,0.2), 0 0 15px rgba(239,68,68,0.4);
+}
+.m16-proxy-toggle.active .icon { color: #ef4444; }
+
+.m16-proxy-btn {
+  background: rgba(139, 92, 246, 0.05);
+  color: #64748b;
+  border: 1px solid rgba(139, 92, 246, 0.15);
+  padding: 10px 24px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 12px;
+  cursor: not-allowed;
+  opacity: 0.4;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+.m16-proxy-btn.ready {
+  opacity: 1;
+  cursor: pointer;
+}
+.m16-proxy-btn.forward.ready {
+  background: rgba(16, 185, 129, 0.1);
+  border-color: #10b981;
+  color: #6ee7b7;
+  box-shadow: inset 0 0 10px rgba(16,185,129,0.1);
+}
+.m16-proxy-btn.forward.ready:hover { 
+  background: rgba(16, 185, 129, 0.25); 
+  color: #fff; 
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.5), inset 0 0 10px rgba(16,185,129,0.3); 
+}
+
+.m16-proxy-btn.drop.ready {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: #ef4444;
+  color: #fca5a5;
+  box-shadow: inset 0 0 10px rgba(239,68,68,0.1);
+}
+.m16-proxy-btn.drop.ready:hover { 
+  background: rgba(239, 68, 68, 0.25); 
+  color: #fff; 
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.5), inset 0 0 10px rgba(239,68,68,0.3); 
+}
+
+.m16-proxy-body {
+  flex: 1;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+.m16-proxy-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: -1px;
+}
+.m16-proxy-tab {
+  padding: 10px 20px;
+  background: rgba(0, 0, 0, 0.4);
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 700;
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  border-bottom: none;
+  border-radius: 6px 6px 0 0;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  transition: all 0.2s;
+}
+.m16-proxy-tab.active {
+  background: rgba(0, 0, 0, 0.8);
+  color: #c4b5fd;
+  border-color: rgba(139, 92, 246, 0.5);
+  box-shadow: 0 -5px 10px rgba(139,92,246,0.1);
+}
+.m16-proxy-editor-container {
+  flex: 1;
+  background: #020105;
+  border: 1px solid rgba(139, 92, 246, 0.5);
+  border-radius: 0 6px 6px 6px;
+  position: relative;
+  box-shadow: inset 0 0 30px rgba(0,0,0,1);
+  overflow: hidden;
+}
+
+/* Scanlines for the Textarea */
+.m16-proxy-editor-container::after {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0; left: 0; bottom: 0; right: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+  z-index: 2;
+  background-size: 100% 2px, 3px 100%;
+  pointer-events: none;
+}
+
+.m16-proxy-textarea {
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  border: none;
+  padding: 20px;
+  color: #10b981;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 15px;
+  line-height: 1.6;
+  outline: none;
+  resize: none;
+  text-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
+  position: relative;
+  z-index: 3;
+}
+.m16-proxy-textarea::selection {
+  background: rgba(16, 185, 129, 0.3);
+}
+.m16-proxy-textarea:focus { outline: none; }
+.m16-proxy-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #475569;
+  font-family: 'Share Tech Mono', monospace;
+  text-align: center;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+/* ── DATA FLOW ANIMATIONS (Fiber Optic) ── */
+.m16-data-flow-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* Fiber Optic Flow Line */
+.m16-flow-path {
+  position: absolute;
+  top: 50%;
+  left: 20px;
+  right: 20px;
+  height: 1px;
+  background: rgba(139, 92, 246, 0.1);
+  transform: translateY(-50%);
+  box-shadow: 0 0 10px rgba(139, 92, 246, 0.2);
+}
+.m16-flow-path::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.5), transparent);
+  animation: m16-fiber-flow 2s infinite linear;
+}
+@keyframes m16-fiber-flow {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* The Packet */
+.m16-packet {
+  position: absolute;
+  top: 50%;
+  left: calc(25% + 15px);
+  width: 12px;
+  height: 12px;
+  background: #fff;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+}
+
+/* Animations */
+.m16-packet.anim-send-to-proxy {
+  animation: m16-shoot-proxy 0.5s cubic-bezier(0.2, 0, 0, 1) forwards;
+}
+.m16-packet.anim-pulsing-in-proxy {
+  left: calc(75% - 15px);
+  opacity: 1;
+  background: #10b981;
+  box-shadow: 0 0 20px #10b981, 0 0 40px #10b981, 0 0 60px #10b981;
+  animation: m16-pulse 1s infinite alternate;
+}
+.m16-packet.anim-forward-to-server {
+  left: calc(75% - 15px);
+  background: #10b981;
+  box-shadow: 0 0 20px #10b981, 0 0 40px #10b981;
+  animation: m16-shoot-server 0.4s ease-in forwards;
+}
+.m16-packet.anim-drop-shatter {
+  left: calc(75% - 15px);
+  background: #ef4444;
+  box-shadow: 0 0 20px #ef4444, 0 0 40px #ef4444;
+  animation: m16-shatter 0.6s cubic-bezier(0.1, 0.9, 0.2, 1) forwards;
+}
+
+@keyframes m16-shoot-proxy {
+  0% { left: 25%; opacity: 0; transform: translate(-50%, -50%) scale(0.5); box-shadow: 0 0 10px #fff; }
+  20% { opacity: 1; }
+  100% { left: 75%; opacity: 1; transform: translate(-50%, -50%) scale(1.5); background: #10b981; box-shadow: 0 0 30px #10b981; }
+}
+
+@keyframes m16-pulse {
+  0% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.8; }
+  100% { transform: translate(-50%, -50%) scale(1.8); opacity: 1; }
+}
+
+@keyframes m16-shoot-server {
+  0% { left: 75%; opacity: 1; transform: translate(-50%, -50%) scale(1.5); }
+  80% { opacity: 1; }
+  100% { left: 120%; opacity: 0; transform: translate(-50%, -50%) scale(0.2); }
+}
+
+@keyframes m16-shatter {
+  0% { transform: translate(-50%, -50%) scale(1.5); opacity: 1; }
+  40% { transform: translate(-50%, -50%) scale(3); opacity: 0.9; box-shadow: 0 0 60px #ef4444, inset 0 0 20px #fff; background: transparent; border: 2px solid #ef4444; }
+  100% { transform: translate(-50%, -50%) scale(5); opacity: 0; filter: blur(10px); border-width: 0px; }
+}
+
+/* ── Briefing Modal (Glass Dossier) ── */
+.m16-briefing {
+  position: absolute;
+  inset: 0;
+  background: rgba(2, 0, 5, 0.85);
+  backdrop-filter: blur(8px);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: m16-fadein 0.3s ease-out;
+}
+@keyframes m16-fadein { from { opacity: 0; backdrop-filter: blur(0px); } to { opacity: 1; backdrop-filter: blur(8px); } }
+
+.m16-briefing-content {
+  background: rgba(13, 6, 26, 0.9);
+  border: 1px solid rgba(139, 92, 246, 0.4);
+  border-radius: 16px;
+  padding: 48px;
+  max-width: 650px;
+  text-align: center;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.8), inset 0 0 50px rgba(139,92,246,0.1);
+  position: relative;
+  overflow: hidden;
+  transform: translateY(0);
+  animation: m16-slideup 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+@keyframes m16-slideup { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+.m16-briefing-content::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 4px;
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899);
+}

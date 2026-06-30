@@ -1,0 +1,396 @@
+/* ─── MODULE 11: RECON OPS — NOISE DISCIPLINE ─── */
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap');
+
+.m11-container {
+  background: radial-gradient(circle at 50% 50%, rgba(162, 88, 255, 0.08) 0%, rgba(5, 1, 14, 0) 80%);
+  background-color: #05010e;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Space Grotesk', sans-serif;
+  user-select: none;
+  padding: 16px;
+  min-height: 680px;
+  gap: 10px;
+}
+
+/* Ambient grid pattern */
+.m11-container::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(rgba(162, 88, 255, 0.04) 1px, transparent 1px) 0 0 / 40px 40px,
+    linear-gradient(90deg, rgba(162, 88, 255, 0.04) 1px, transparent 1px) 0 0 / 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Top HUD ── */
+.m11-hud {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 10;
+  padding: 0 4px;
+}
+
+.m11-hud-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: #a258ff;
+}
+
+.m11-hud-stats {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* ── Suspicion Meter ── */
+.m11-suspicion-container {
+  z-index: 10;
+  padding: 0 4px;
+}
+
+.m11-suspicion-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: #a258ff;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 6px;
+  font-weight: 700;
+}
+
+.m11-suspicion-bar {
+  height: 8px;
+  background: #0d061a;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid #23123a;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.8);
+}
+
+.m11-suspicion-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.6s;
+  box-shadow: 0 0 8px var(--glow-color, rgba(16, 185, 129, 0.4));
+}
+
+.m11-suspicion-low { background: linear-gradient(90deg, #10b981, #059669); --glow-color: rgba(16, 185, 129, 0.4); }
+.m11-suspicion-med { background: linear-gradient(90deg, #eab308, #ca8a04); --glow-color: rgba(234, 179, 8, 0.4); }
+.m11-suspicion-high { background: linear-gradient(90deg, #ef4444, #dc2626); --glow-color: rgba(239, 68, 68, 0.6); animation: m11-throb 0.6s infinite alternate; }
+
+@keyframes m11-throb {
+  0% { opacity: 0.7; }
+  100% { opacity: 1; }
+}
+
+/* ── Token Display ── */
+.m11-tokens {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.m11-token-pip {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #a258ff;
+  box-shadow: 0 0 6px rgba(162, 88, 255, 0.5);
+  transition: all 0.3s;
+}
+
+.m11-token-spent {
+  background: #23123a;
+  box-shadow: none;
+}
+
+/* ── Port Grid ── */
+.m11-port-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  z-index: 10;
+  flex: 1;
+  align-content: center;
+  max-width: 700px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 10px 0;
+}
+
+/* ── Port Node ── */
+.m11-port-node {
+  background: #0d061a;
+  border: 1px solid #23123a;
+  border-radius: 10px;
+  padding: 16px;
+  min-height: 130px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.m11-port-node:hover {
+  border-color: #a258ff;
+  transform: translateY(-2px);
+  box-shadow: 0 0 15px rgba(162, 88, 255, 0.4);
+}
+
+.m11-port-node::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: transparent;
+  transition: background 0.3s;
+}
+
+.m11-port-open::before { background: linear-gradient(90deg, #10b981, #059669); }
+.m11-port-closed::before { background: linear-gradient(90deg, #ef4444, #dc2626); }
+
+.m11-port-number {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 22px;
+  font-weight: 900;
+  color: #f3f0ff;
+  letter-spacing: 1px;
+}
+
+.m11-port-state {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  padding: 2px 8px;
+  border-radius: 3px;
+  display: inline-block;
+  width: fit-content;
+}
+
+.m11-state-open { background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); }
+.m11-state-closed { background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); }
+
+.m11-port-service {
+  color: #a258ff;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.m11-port-version {
+  color: #f3f0ff;
+  font-size: 12px;
+}
+
+.m11-port-script {
+  color: #eab308;
+  font-size: 11px;
+  font-style: italic;
+  border-top: 1px dashed #23123a;
+  padding-top: 6px;
+  margin-top: 2px;
+}
+
+.m11-port-unknown {
+  color: #4a5568;
+  font-size: 13px;
+}
+
+.m11-port-stale {
+  border-color: rgba(234, 179, 8, 0.4) !important;
+  animation: m11-stale-flash 1s ease-out;
+}
+
+@keyframes m11-stale-flash {
+  0% { background: rgba(234, 179, 8, 0.15); }
+  100% { background: transparent; }
+}
+
+.m11-stale-badge {
+  position: absolute;
+  top: 8px; right: 8px;
+  font-size: 9px;
+  color: #eab308;
+  background: rgba(234, 179, 8, 0.1);
+  border: 1px solid rgba(234, 179, 8, 0.3);
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Call target mode: vulnerable highlight */
+.m11-port-vuln-target {
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.3) !important;
+  animation: m11-vuln-pulse 1s infinite alternate;
+}
+
+@keyframes m11-vuln-pulse {
+  0% { box-shadow: 0 0 10px rgba(239, 68, 68, 0.2); }
+  100% { box-shadow: 0 0 30px rgba(239, 68, 68, 0.5); }
+}
+
+/* Scan animation on node */
+.m11-scanning-node {
+  position: relative;
+}
+.m11-scanning-node::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border: 2px solid #a258ff;
+  border-radius: 12px;
+  animation: m11-scan-ring 0.8s ease-out forwards;
+}
+
+@keyframes m11-scan-ring {
+  0% { transform: scale(0.9); opacity: 1; }
+  100% { transform: scale(1.1); opacity: 0; }
+}
+
+/* ── Scan Toolbar ── */
+.m11-toolbar {
+  display: flex;
+  gap: 10px;
+  z-index: 10;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.m11-scan-btn {
+  background: #0d061a;
+  border: 1px solid #23123a;
+  border-radius: 8px;
+  padding: 12px 18px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 140px;
+}
+
+.m11-scan-btn:hover {
+  border-color: #a258ff;
+  transform: translateY(-2px);
+  box-shadow: 0 0 15px rgba(162, 88, 255, 0.3);
+}
+
+.m11-scan-btn-active {
+  border-color: #a258ff !important;
+  background: rgba(162, 88, 255, 0.1) !important;
+  box-shadow: 0 0 15px rgba(162, 88, 255, 0.4), inset 0 0 10px rgba(162, 88, 255, 0.2) !important;
+}
+
+.m11-scan-btn-disabled {
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.m11-scan-cmd {
+  color: #10b981;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.m11-scan-cost {
+  display: flex;
+  gap: 10px;
+  font-size: 10px;
+  color: #565f89;
+}
+
+.m11-scan-cost span {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.m11-call-btn {
+  background: #0d061a;
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  border-radius: 8px;
+  padding: 12px 24px;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #ef4444;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.m11-call-btn:hover {
+  border-color: #ef4444;
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
+  transform: translateY(-2px);
+}
+
+/* ── Rotation Warning ── */
+.m11-rotation-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(239, 68, 68, 0.08);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  animation: m11-static 0.6s;
+  backdrop-filter: blur(2px);
+  border-radius: inherit;
+}
+
+@keyframes m11-static {
+  0% { background: rgba(239, 68, 68, 0.3); }
+  25% { background: rgba(239, 68, 68, 0.05); }
+  50% { background: rgba(239, 68, 68, 0.2); }
+  100% { background: rgba(239, 68, 68, 0.08); }
+}
+
+.m11-rotation-text {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: #ef4444;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  text-shadow: 0 0 20px rgba(239, 68, 68, 0.5);
+  animation: m11-flash-text 0.3s infinite alternate;
+}
+
+@keyframes m11-flash-text {
+  0% { opacity: 0.6; }
+  100% { opacity: 1; }
+}
+
+/* ── Stealth Rating ── */
+.m11-rating {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 64px;
+  font-weight: 900;
+  letter-spacing: 4px;
+}
+
+.m11-rating-s { color: #10b981; text-shadow: 0 0 40px rgba(16, 185, 129, 0.5); }
+.m11-rating-a { color: #a258ff; text-shadow: 0 0 40px rgba(162, 88, 255, 0.5); }
+.m11-rating-b { color: #eab308; text-shadow: 0 0 40px rgba(234, 179, 8, 0.5); }
+.m11-rating-c { color: #f97316; text-shadow: 0 0 40px rgba(249, 115, 22, 0.5); }
+.m11-rating-f { color: #ef4444; text-shadow: 0 0 40px rgba(239, 68, 68, 0.5); }

@@ -1,0 +1,220 @@
+/* ─── MODULE 14: DNS RECONNAISSANCE ─── */
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap');
+
+.m14-container {
+  background: radial-gradient(circle at 50% 50%, rgba(162, 88, 255, 0.08) 0%, rgba(5, 1, 14, 0) 80%);
+  background-color: #05010e;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Space Grotesk', sans-serif;
+  user-select: none;
+  min-height: 700px;
+  color: #f1f5f9;
+}
+
+/* ── HUD ── */
+.m14-hud {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 50;
+  pointer-events: none;
+}
+.m14-hud-title {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  color: #64748b;
+  font-weight: bold;
+}
+.m14-hud-controls {
+  pointer-events: auto;
+}
+
+/* ── Layout Grid ── */
+.m14-layout {
+  display: flex;
+  flex: 1;
+  gap: 20px;
+  padding: 60px 20px 20px;
+  position: relative;
+  z-index: 10;
+}
+
+/* ── Left Column: Query Builder ── */
+.m14-sidebar {
+  width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.m14-panel-header {
+  color: #a258ff;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 12px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid #23123a;
+  padding-bottom: 8px;
+}
+
+.m14-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.m14-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #64748b;
+  font-weight: bold;
+}
+.m14-input, .m14-select {
+  background: #020005;
+  border: 1px solid #334155;
+  border-radius: 4px;
+  padding: 10px 12px;
+  color: #f1f5f9;
+  font-family: monospace;
+  font-size: 13px;
+  transition: all 0.2s;
+  outline: none;
+}
+.m14-input:focus, .m14-select:focus {
+  border-color: #a258ff;
+  box-shadow: 0 0 10px rgba(162, 88, 255, 0.2);
+}
+.m14-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.m14-query-preview {
+  margin-top: auto;
+  background: #0d061a;
+  border: 1px solid #23123a;
+  padding: 12px;
+  border-radius: 6px;
+  font-family: monospace;
+  font-size: 11px;
+  color: #a258ff;
+  word-break: break-all;
+}
+
+.m14-btn-execute {
+  background: rgba(162, 88, 255, 0.1);
+  border: 1px solid #a258ff;
+  color: #a258ff;
+  padding: 12px;
+  border-radius: 4px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 12px;
+}
+.m14-btn-execute:hover:not(:disabled) {
+  background: #a258ff;
+  color: #fff;
+  box-shadow: 0 0 15px rgba(162, 88, 255, 0.4);
+}
+.m14-btn-execute:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  border-color: #334155;
+  color: #64748b;
+}
+
+/* ── Right Column: Terminal ── */
+.m14-terminal {
+  flex: 1;
+  background: #020005;
+  border: 1px solid #23123a;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+.m14-term-header {
+  background: #0d061a;
+  border-bottom: 1px solid #23123a;
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.m14-term-dots {
+  display: flex;
+  gap: 6px;
+}
+.m14-term-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: #334155;
+}
+.m14-term-dot.r { background: #ef4444; }
+.m14-term-dot.y { background: #eab308; }
+.m14-term-dot.g { background: #10b981; }
+.m14-term-title {
+  font-size: 11px;
+  color: #64748b;
+  font-family: monospace;
+  margin-left: auto;
+}
+
+.m14-term-body {
+  flex: 1;
+  padding: 16px;
+  font-family: 'Space Grotesk', monospace;
+  font-size: 13px;
+  color: #cbd5e1;
+  overflow-y: auto;
+  line-height: 1.6;
+}
+
+.m14-cursor {
+  display: inline-block;
+  width: 8px;
+  height: 14px;
+  background: #a258ff;
+  animation: m14-blink 1s step-end infinite;
+  vertical-align: middle;
+  margin-left: 4px;
+}
+
+@keyframes m14-blink { 50% { opacity: 0; } }
+
+/* Terminal Output Colors */
+.m14-out-cmd { color: #a258ff; font-weight: bold; }
+.m14-out-comment { color: #64748b; }
+.m14-out-domain { color: #f1f5f9; font-weight: bold; }
+.m14-out-ip { color: #10b981; }
+.m14-out-error { color: #ef4444; font-weight: bold; }
+
+/* Interactive Extract Button inside Terminal */
+.m14-extract-btn {
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid #10b981;
+  color: #10b981;
+  padding: 2px 8px;
+  border-radius: 2px;
+  font-size: 10px;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-left: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.m14-extract-btn:hover {
+  background: #10b981;
+  color: #05010e;
+}
